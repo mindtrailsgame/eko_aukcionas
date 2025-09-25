@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tvarumo Aukcionas</title>
+    <style>
+        :root {
+            --primary-color: #2c6e49;
+            --secondary-color: #fefee3;
+            --accent-color: #ffc94b;
+            --danger-color: #d9534f;
+            --light-bg: #f9f9f9;
+            --info-color: #4a90e2;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            background-color: var(--light-bg);
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .phone-wrapper {
+            width: 100%;
+            max-width: 400px;
+            height: 100vh;
+            max-height: 800px;
+            background-color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border-radius: 20px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .screen { display: none; flex-direction: column; height: 100%; padding: 20px; box-sizing: border-box; text-align: center; }
+        .screen.active { display: flex; }
+        #start-screen { justify-content: center; gap: 20px; }
+        #start-screen h1 { font-size: 2.5em; color: var(--primary-color); }
+        #start-screen p { font-size: 1.1em; line-height: 1.5; }
+        #game-screen { padding: 0; }
+        .game-header { background-color: var(--primary-color); color: white; padding: 15px 20px; border-bottom: 4px solid var(--accent-color); }
+        .game-header h2 { margin: 0; font-size: 1.2em; }
+        .score-display { font-size: 2em; font-weight: bold; margin-top: 5px; transition: color 0.3s; }
+        .day-nav { display: flex; justify-content: space-around; padding: 10px 0; background-color: #f0f0f0; }
+        .day-btn { background: none; border: 2px solid transparent; padding: 8px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .day-btn.active { border-color: var(--primary-color); background-color: var(--secondary-color); }
+        .plan-area { flex-grow: 1; padding: 20px; overflow-y: auto; text-align: left; }
+        .plan-slot { background-color: #fff; border: 1px dashed #ccc; border-radius: 8px; margin-bottom: 15px; padding: 15px; }
+        .plan-slot h3, .plan-area h2 { margin: 0 0 10px 0; color: var(--primary-color); }
+        .slot-content { min-height: 24px; }
+        .add-btn { background: none; border: none; color: var(--primary-color); font-weight: bold; font-size: 1em; cursor: pointer; }
+        .action-buttons-container { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px; }
+        .action-btn { background-color: var(--secondary-color); color: var(--primary-color); border: 1px solid var(--primary-color); padding: 10px; border-radius: 8px; text-align: center; cursor: pointer; font-weight: bold; }
+        #end-screen {
+            justify-content: flex-start; /* Pradeda turinį nuo viršaus */
+            gap: 20px;
+            overflow-y: auto; /* Prideda scroll, jei reikia */
+        }
+        .btn { padding: 15px 25px; font-size: 1.2em; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; }
+        .btn-primary { background-color: var(--accent-color); color: var(--primary-color); }
+        .btn-secondary { background-color: #eee; color: #555; }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center; }
+        .modal.active { display: flex; }
+        .modal-content { background-color: white; padding: 20px; border-radius: 15px; width: 90%; max-width: 380px; max-height: 80%; overflow-y: auto; }
+        .modal-item { display: flex; align-items: center; padding: 12px; border-bottom: 1px solid #eee; cursor: pointer; gap: 10px; }
+        .modal-item:hover { background-color: var(--secondary-color); }
+        .item-name { flex-grow: 1; }
+        .item-points { font-weight: bold; white-space: nowrap; }
+        .item-info-icon { font-weight: bold; color: var(--info-color); cursor: help; border-radius: 50%; width: 20px; height: 20px; display: inline-flex; justify-content: center; align-items: center; border: 1px solid var(--info-color); }
+        .general-actions-list { list-style-type: none; padding: 0; margin-top: 10px; }
+        .general-actions-list li { background: #f0f0f0; padding: 5px 10px; border-radius: 5px; font-size: 0.9em; margin-bottom: 5px; }
+        .btn.disabled {
+            background-color: #ccc;
+            color: #888;
+            cursor: not-allowed;
+            border-color: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-wrapper">
+        <div id="start-screen" class="screen active">
+            <h1>Tvarumo Aukcionas 🌍</h1>
+            <p>Suplanuokite savaitę, neviršydami 100 eko-taškų biudžeto. Sėkmės!</p>
+            <button id="start-btn" class="btn btn-primary">Pradėti žaidimą</button>
+            <button id="rules-btn" class="btn btn-secondary">Kaip žaisti?</button>
+        </div>
+        <div id="game-screen" class="screen">
+            <header class="game-header">
+                <h2>Likutis:</h2>
+                <div id="score" class="score-display">100/100 tšk.</div>
+            </header>
+            <nav class="day-nav" id="day-nav"></nav>
+            <main class="plan-area" id="plan-area"></main>
+            <button id="finish-btn" class="btn btn-primary" style="margin: 20px; border-radius: 8px;">Baigti planavimą</button>
+        </div>
+        <div id="end-screen" class="screen">
+            <h2 id="end-title">Rezultatas</h2>
+            <p id="end-message" style="font-size: 1.2em;"></p>
+            <button id="restart-btn" class="btn btn-primary">Žaisti iš naujo</button>
+        </div>
+    </div>
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <h3 id="modal-title">Pasirinkite veiksmą</h3>
+            <div id="modal-list"></div>
+            <div id="modal-footer" style="margin-top: 20px; display: flex; justify-content: space-between;">
+                <button id="modal-close-btn" class="btn btn-secondary">Uždaryti</button>
+                <button id="modal-confirm-btn" class="btn btn-primary" style="display: none;">Patvirtinti</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- DATA FROM PDF (UPDATED) ---
+        const items = {
+            'Maistas': [
+                { name: 'Jautienos kepsnys ar mėsainis', points: -15, reality: 'Viena 200 g porcija jautienos „kainuoja“ apie 12-20 kg CO2e. Tai prilygsta maždaug 100 km kelionei automobiliu.' },
+                { name: 'Pica su sūriu ar patiekalas su daug sūrio', points: -10, reality: 'Sūrio gamyba yra antras didžiausias maisto pramonės teršėjas po jautienos. 1 kg sūrio apie 10-20 kg CO2e.' },
+                { name: 'Patiekalas su vištiena / kiauliena', points: -8, reality: '1 kg vištienos - apie 6 kg CO2e. Žymiai mažiau nei jautienos, bet vis tiek reikšmingai daugiau nei augalinio maisto.' },
+                { name: 'Patiekalas su žuvimi (pvz., lašiša iš fermos)', points: -6, reality: 'Priklauso nuo žuvies, bet 1 kg lašišos iš fermos gamyba gali siekti apie 11 kg CO2e.' },
+                { name: 'Patiekalas su importuotais augaliniais produktais', points: -4, reality: 'Nors poveikis mažesnis, tolimas transportavimas ir didelis vandens suvartojimas (pvz., 1 kg avokadų gali prireikti iki 2000 litrų vandens) palieka pėdsaką.' },
+                { name: 'Sumuštiniai su daržovėmis (+ priedas)', points: -3, reality: 'Apie 0.3 kg CO2e. Priedai su gyvūninės kilmės produktais ženkliai padidina pėdsaką.' },
+                { name: 'Vietinė košė ar vietinių daržovių sriuba/troškinys', points: -2, reality: 'Poveikis minimalus. 1 kg lęšių - mažiau nei 1 kg CO2e.' },
+            ],
+            'Gėrimai': [
+                { name: 'Kava vienkartiniame puodelyje', points: -2, reality: 'Pats popierinis puodelis su plastikiniu dangteliu turi apie 0.1 kg CO₂e pėdsaką. Per metus tai gali susidaryti į reikšmingą kiekį.' },
+                { name: 'Energinis gėrimas / gėrimas skardinėje', points: -4, reality: 'Apie 0.3-0.5 kg CO2e. Didžiausią poveikį daro aliuminio skardinės gamyba, kuri yra itin imli energijai.' },
+            ],
+            'Transportas': [
+                { name: 'Kelionė automobiliu (vienam/dviese)', points: -14, reality: 'Vidutinis benzininis automobilis išmeta apie 170 g CO2/km. 40 km kelionė pirmyn ir atgal - apie 6.8 kg CO2e.' },
+                { name: 'Kelionė viešuoju transportu', points: -4, reality: 'Poveikis išsidalina visiems keleiviams. Vienam žmogui tenkanti emisija 40 km kelionei yra apie 1.6 kg CO₂e.' },
+                { name: 'Kelionė dviračiu, paspirtuku ar pėsčiomis', points: 2, reality: 'Poveikis aplinkai - praktiškai 0.' },
+            ],
+            'Užkandžiai ir gėrimai': [
+                { name: '„Pringles" traškučių tūtelė', points: -6, reality: 'Realybė: ~0.7 kg CO₂e. Šis produktas yra „ekologinis košmaras“ dėl pakuotės. Tūtelė pagaminta iš kelių medžiagų (kartono, metalo, plastikinio dangtelio), todėl jos praktiškai neįmanoma perdirbti.' },
+                { name: '„Estrella" ar „Oho!" traškučių pakelis', points: -5, reality: 'Realybė: ~0.4-0.6 kg CO₂e. Nors pačių traškučių pėdsakas panašus, pakuotė yra šiek tiek mažesnis blogis nei „Pringles“, tačiau vis tiek pagaminta iš daugiasluoksnio, sunkiai perdirbamo plastiko ir aliuminio folijos.' },
+                { name: '„Magija" glaistytas sūrelis', points: -4, reality: 'Realybė: ~0.3-0.5 kg CO₂e. Pieno produktų gamyba (varškė, sviestas) yra imli resursams. Taip pat prisideda neperdirbama daugiasluoksnė pakuotė.' },
+                { name: 'Šokoladukas „Karūna"', points: -4, reality: 'Realybė: Poveikis labai priklauso nuo ingredientų. Pieno milteliai, palmių aliejus (dažnai susijęs su miškų kirtimu) ir netvariai auginama kakava sudaro didžiąją dalį pėdsako.' },
+                { name: '„Coca-Cola" gėrimas (0.5 l plastikiniame butelyje)', points: -3, reality: 'Realybė: ~0.2-0.3 kg CO₂e. Plastikinis (PET) butelis gaminamas iš naftos. Prie pėdsako prisideda ne tik butelio gamyba, bet ir cukraus gamyba, transportavimas.' },
+                { name: '„Coca-Cola" gėrimas (0.33 l skardinėje)', points: -4, reality: 'Realybė: ~0.3-0.5 kg CO₂e. Aliuminio gamyba yra itin imli energijai, todėl skardinė palieka didesnį pėdsaką nei plastikinis butelis.' },
+                { name: '„Smetoniška" gira (1 l plastikiniame butelyje)', points: -2, reality: 'Realybė: ~0.3 kg CO₂e (už visą butelį). Gira dažnai yra lokalesnis produktas, reikalaujantis mažiau sudėtingų, importuojamų ingredientų ir trumpesnio transportavimo kelio.' },
+                { name: '„Neptūno" vanduo (0.5 l plastikiniame butelyje)', points: -3, reality: 'Realybė: ~0.15 kg CO₂e. Visą žalą daro plastikinė pakuotė ir transportavimas, ypač kai Lietuvoje turime aukštos kokybės vandenį iš čiaupo.' },
+                { name: 'Lietuviškas obuolys ar morka (be pakuotės)', points: 0, reality: 'Realybė: Poveikis artimas nuliui. Vietinis, sezoninis produktas be jokios pakuotės. Pats tvariausias pasirinkimas.' },
+                { name: 'Vanduo iš čiaupo (į savo gertuvę)', points: 1, reality: 'Realybė: Poveikis praktiškai nulinis. Gertuvės naudojimas padeda išvengti šimtų plastikinių butelių per metus.' }
+            ],
+            'Pirkiniai ir pramogos': [
+                { name: 'Skrydis lėktuvu savaitgalio išvykai', points: -80, reality: 'Toks skrydis į abi puses vienam asmeniui išmeta apie 250-300 kg CO2e. Tai daugiau, nei tvarus metinis CO2 biudžetas leidžia transportui.', isWeekly: true },
+                { name: 'Naujas išmanusis telefonas', points: -75, reality: 'Apie 80% telefono CO2 pėdsako atsiranda gamybos metu. Tai sudaro apie 60-90 kg CO2e, neįskaitant retųjų metalų kasybos poveikio.'},
+                { name: 'Naujas greitosios mados drabužis (pvz., džinsai)', points: -30, reality: 'Viena pora džinsų – apie 33 kg CO2e ir ~3,700 litrų vandens. Tai prilygsta 111 km kelionei automobiliu ir 3 metų geriamojo vandens kiekiui vienam žmogui.'},
+                { name: 'Drabužis ar daiktas iš antrų rankų parduotuvės', points: -3, reality: 'Poveikis artimas nuliui, nesukuriama nauja paklausa gamybai. Pėdsaką sudaro tik transportavimas iki parduotuvės.'},
+                { name: 'Apsilankymas kine', points: -5, reality: 'Poveikis nedidelis, daugiausia susijęs su pastato energijos vartojimu.'},
+                { name: 'Pasivaikščiojimas parke / žygis miške', points: 3, reality: 'Skatina ryšį su gamta, jos vertinimą ir išsaugojimą.'},
+                { name: 'Skaitmeninės knygos skaitymas (e. knyga)', points: -2, reality: 'Pats skaitymo ir atsisiuntimo procesas yra labai taupus (~20-50 g CO₂e). Palyginimui, naujos popierinės knygos pėdsakas - apie 1-3 kg CO2e. Tačiau didysis „bet" yra skaitymo įrenginio (skaityklės, planšetės) gamyba, kuri siekia ~30-50 kg CO2e. Vadinasi, kad skaityklė atsipirktų ekologiškai, ja reikia perskaityti dešimtis knygų, kurias antraip būtumėte pirkę popierines. Pats tvariausias pasirinkimas - skaityti knygas iš bibliotekos!'},
+                { name: 'Nauja knyga (popierinė)', points: -6, reality: 'Vidutinė knyga palieka apie 1-3 kg CO₂e pėdsaką dėl popieriaus gamybos, spausdinimo ir transportavimo.'},
+            ],
+            'Skaitmeninis pasaulis ir buitis': [
+                { name: 'Video žaidimai galingu kompiuteriu (už dieną)', points: -4, reality: 'Galingas žaidimų kompiuteris gali vartoti tiek pat energijos, kiek keli šaldytuvai. Kelios valandos žaidimo - apie 0.5-1 kg CO₂e.'},
+                { name: 'Dirbtinio intelekto (ChatGPT) aktyvus naudojimas (už dieną)', points: -3, reality: 'Nors viena užklausa palieka mažą pėdsaką, intensyvus naudojimas per valandą gali sugeneruoti apie 0.5-7.5 g CO2e dėl duomenų centrų energijos.'},
+                { name: 'Naršymas socialiniuose tinkluose (1-2 val. per dieną)', points: -2, reality: 'Valanda naršymo sugeneruoja apie 60-120 g CO2e. „Debesis“ (cloud) iš tiesų yra didžiuliai, fiziškai egzistuojantys ir daug energijos reikalaujantys pastatai.'},
+                { name: 'Išmaniojo telefono įkrovimas (už visą savaitę)', points: -1, reality: 'Pats įkrovimas yra menkas (5-10 g CO₂e), bet tai priminimas apie didžiausią telefono poveikį - gamybą (60-90 kg CO₂е).', isWeekly: true },
+                { name: 'Skalbimas ir džiovinimas el. džiovyklėje (už 1 ciklą)', points: -5, reality: 'Džiovyklė yra vienas daugiausiai energijos vartojančių prietaisų. Vienas ciklas - apie 1-2 kg CO2e.'},
+            ],
+            'Pozityvūs veiksmai': [
+                 { name: 'Savaitę nepirkti nieko, kas supakuota į vienkartinį plastiką', points: 10, reality: 'Mažinate plastiko taršą ir iškastinio kuro vartojimą, nes plastikas gaminamas iš naftos.', isWeekly: true },
+                 { name: 'Kruopštus rūšiavimas visą savaitę', points: 5, reality: 'Perdirbimas taupo energiją ir gamtos išteklius. Pvz., pagaminti skardinę iš perdirbto aliuminio reikia 95% mažiau energijos.', isWeekly: true }
+            ]
+        };
+
+        const STARTING_POINTS = 100;
+        const WEEKDAYS = ['P', 'A', 'T', 'K', 'Pn', 'Š', 'S'];
+        const DAY_NAMES = ['Pirmadienis', 'Antradienis', 'Trečiadienis', 'Ketvirtadienis', 'Penktadienis', 'Šeštadienis', 'Sekmadienis'];
+
+        let currentScore, currentDay, weeklyPlan, chosenWeeklyActions, isWednesdayEventTriggered, isWednesdayEventActive;
+        const dom = {
+            screens: document.querySelectorAll('.screen'), startBtn: document.getElementById('start-btn'), rulesBtn: document.getElementById('rules-btn'), finishBtn: document.getElementById('finish-btn'), restartBtn: document.getElementById('restart-btn'), scoreDisplay: document.getElementById('score'), dayNav: document.getElementById('day-nav'), planArea: document.getElementById('plan-area'), modal: document.getElementById('modal'), modalTitle: document.getElementById('modal-title'), modalList: document.getElementById('modal-list'), modalCloseBtn: document.getElementById('modal-close-btn'),
+            endTitle: document.getElementById('end-title'),
+            endMessage: document.getElementById('end-message')
+        };
+
+        function showScreen(screenId) { dom.screens.forEach(s => s.classList.toggle('active', s.id === screenId)); }
+        
+        function initGame() {
+            currentScore = STARTING_POINTS; currentDay = 0; chosenWeeklyActions = []; isWednesdayEventTriggered = false; isWednesdayEventActive = false;
+            weeklyPlan = Array.from({ length: 7 }, (_, i) => ({
+                'Pusryčiai': [], 'Pietūs': [], 'Vakarienė': [],
+                'Transportas': [], 
+                'Bendri veiksmai': []
+            }));
+            updateScore(0); renderDayNav(); renderPlanForDay(currentDay); showScreen('game-screen'); updateFinishButtonState();
+        }
+
+        function updateScore(points) {
+            currentScore += points;
+            dom.scoreDisplay.textContent = `${currentScore}/${STARTING_POINTS} tšk.`;
+            if (currentScore < 0) dom.scoreDisplay.style.color = '#d9534f';
+            else if (currentScore < STARTING_POINTS / 2) dom.scoreDisplay.style.color = '#ffc94b';
+            else dom.scoreDisplay.style.color = 'white';
+        }
+        function updateFinishButtonState() {
+            let isPlanComplete = true;
+            for (let i = 0; i < 7; i++) {
+                const dayPlan = weeklyPlan[i];
+                const foodItemsCount = dayPlan['Pusryčiai'].length + 
+                                       dayPlan['Pietūs'].length + 
+                                       dayPlan['Vakarienė'].length;
+                if (foodItemsCount < 2) {
+                    isPlanComplete = false;
+                    break; 
+                }
+            }
+            dom.finishBtn.classList.toggle('disabled', !isPlanComplete);
+        }
+        function renderDayNav() {
+            dom.dayNav.innerHTML = '';
+            WEEKDAYS.forEach((day, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'day-btn'; btn.textContent = day;
+                btn.classList.toggle('active', index === currentDay);
+                btn.onclick = () => {
+                    currentDay = index;
+                    if (index === 2 && !isWednesdayEventTriggered) {
+                        triggerWednesdayEvent();
+                    }
+                    renderDayNav();
+                    renderPlanForDay(currentDay);
+                };
+                dom.dayNav.appendChild(btn);
+            });
+        }
+        
+        function renderPlanForDay(dayIndex) {
+            dom.planArea.innerHTML = '';
+            const dayPlan = weeklyPlan[dayIndex];
+            const title = document.createElement('h2');
+            title.textContent = DAY_NAMES[dayIndex];
+            dom.planArea.appendChild(title);
+            
+            ['Pusryčiai', 'Pietūs', 'Vakarienė', 'Transportas'].forEach(slotName => {
+                dom.planArea.appendChild(createPlanSlot(dayIndex, slotName, dayPlan[slotName]));
+            });
+            
+            const actionsList = document.createElement('ul');
+            actionsList.className = 'general-actions-list';
+            dayPlan['Bendri veiksmai'].forEach(item => {
+                const li = document.createElement('li');
+                li.innerHTML = `${item.name} <strong>(${item.points > 0 ? '+' : ''}${item.points} tšk.)</strong> <span class="item-info-icon" onclick='alert(${JSON.stringify(item.name + '\\n\\n' + (item.reality || ''))})'>ⓘ</span>`;
+                actionsList.appendChild(li);
+            });
+            dom.planArea.appendChild(actionsList);
+            
+            const actionsContainer = document.createElement('div');
+            actionsContainer.className = 'action-buttons-container';
+            const categories = {
+                'Užkandžiai ir gėrimai': 'Užkandžiai ir gėrimai',
+                'Pirkiniai ir pramogos': 'Pirkiniai ir pramogos',
+                'Skaitmeninis pasaulis ir buitis': 'Skaitmeninis pasaulis ir buitis',
+                'Pozityvūs veiksmai': 'Pozityvūs veiksmai'
+            };
+            for (const btnText in categories) {
+                const btn = document.createElement('button');
+                btn.className = 'action-btn';
+                btn.textContent = btnText;
+                btn.onclick = () => openCategoryModal(dayIndex, categories[btnText]);
+                actionsContainer.appendChild(btn);
+            }
+            dom.planArea.appendChild(actionsContainer);
+            updateFinishButtonState();
+        }
+
+        function createPlanSlot(dayIndex, slotName, items) {
+            const slotDiv = document.createElement('div');
+            slotDiv.className = 'plan-slot';
+            slotDiv.innerHTML = `<h3>${slotName}</h3><div class="slot-content"></div>`;
+            const contentDiv = slotDiv.querySelector('.slot-content');
+            
+            if (items.length > 0) {
+                const list = document.createElement('ul');
+                list.className = 'general-actions-list';
+                items.forEach(item => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `${item.name} <strong>(${item.points > 0 ? '+' : ''}${item.points} tšk.)</strong> <span class="item-info-icon" onclick='alert(${JSON.stringify(item.name + '\\n\\n' + (item.reality || ''))})'>ⓘ</span>`;
+                    list.appendChild(li);
+                });
+                contentDiv.appendChild(list);
+            }
+
+            const addButton = document.createElement('button');
+            addButton.className = 'add-btn';
+            addButton.textContent = '[+] Pridėti';
+            addButton.onclick = () => openModalForSlot(dayIndex, slotName);
+            contentDiv.appendChild(addButton);
+            
+            return slotDiv;
+        }
+        
+        function openModalForSlot(dayIndex, slotName) {
+            const categories = slotName === 'Transportas' ? ['Transportas'] : ['Maistas', 'Gėrimai'];
+            populateMultiSelectModal(`Pasirinkite (${slotName})`, categories, (selectedItems) => {
+                selectedItems.forEach(item => {
+                    weeklyPlan[dayIndex][slotName].push(item);
+                    updateScore(item.points);
+                });
+                renderPlanForDay(dayIndex);
+                closeModal();
+            });
+        }
+        
+        function openCategoryModal(dayIndex, category) {
+            populateMultiSelectModal(category, category, (selectedItems) => {
+                selectedItems.forEach(item => {
+                    if (item.isWeekly) chosenWeeklyActions.push(item.name);
+                    weeklyPlan[dayIndex]['Bendri veiksmai'].push(item);
+                    updateScore(item.points);
+                });
+                renderPlanForDay(dayIndex);
+                closeModal();
+            });
+        }
+
+        function populateMultiSelectModal(title, itemCategories, onConfirmCallback) {
+            dom.modalTitle.textContent = title;
+            dom.modalList.innerHTML = '';
+
+            dom.modal.querySelector('#modal-confirm-btn').style.display = 'inline-block';
+            dom.modal.querySelector('#modal-close-btn').style.display = 'inline-block';
+
+            let temporarySelections = [];
+            let itemsToShow = (Array.isArray(itemCategories) ? itemCategories.flatMap(cat => items[cat]) : items[itemCategories])
+                .filter(item => !item.isWeekly || !chosenWeeklyActions.includes(item.name));
+
+            itemsToShow.forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'modal-item';
+                // Kuriame checkbox ir pridedame ikoną
+                itemDiv.innerHTML = `
+                    <input type="checkbox" id="item-${item.name.replace(/\s+/g, '')}" style="margin-right: 10px;">
+                    <label for="item-${item.name.replace(/\s+/g, '')}" style="display: flex; justify-content: space-between; width: 100%; align-items: center; cursor: pointer;">
+                        <span class="item-name">${item.name}</span>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span class="item-info-icon">ⓘ</span>
+                            <strong class="item-points">${item.points > 0 ? '+' : ''}${item.points} tšk.</strong>
+                        </div>
+                    </label>
+                `;
+
+                const checkbox = itemDiv.querySelector('input');
+                const infoIcon = itemDiv.querySelector('.item-info-icon');
+
+                // Pridedame logiką informacijos ikonai
+                infoIcon.onclick = (e) => {
+                    e.stopPropagation(); // Sustabdo evento perdavimą toliau
+                    e.preventDefault(); // Sustabdo checkbox pažymėjimą
+                    alert(`${item.name}\n\n${item.reality}`);
+                };
+                
+                // Checkbox logika
+                checkbox.addEventListener('change', () => {
+                    if (checkbox.checked) {
+                        temporarySelections.push(item);
+                    } else {
+                        temporarySelections = temporarySelections.filter(selected => selected.name !== item.name);
+                    }
+                });
+
+                dom.modalList.appendChild(itemDiv);
+            });
+
+            const confirmBtn = dom.modal.querySelector('#modal-confirm-btn');
+            confirmBtn.onclick = () => {
+                onConfirmCallback(temporarySelections);
+            };
+
+            dom.modal.classList.add('active');
+        }
+
+        dom.startBtn.addEventListener('click', initGame);
+        dom.rulesBtn.addEventListener('click', () => alert("Žaidimo tikslas:\n\n1. Suplanuokite visą savaitę, priimdami sprendimus kiekvienai dienai.\n2. Startuojate su 100 eko-taškų.\n3. Stenkitės neviršyti biudžeto!\n\nLaimi tas, kas sukuria tvarų ir smagų savaitės planą."));
+        dom.finishBtn.addEventListener('click', () => {
+            if (dom.finishBtn.classList.contains('disabled')) {
+                alert('Ruošiatės badauti?');
+                return; // Sustabdo tolimesnį funkcijos vykdymą
+            }
+            const createSummaryList = (title, items) => {
+                if (items.length === 0) return '';
+                const actionItemsHTML = items.map(action => `<li>• ${action.name}</li>`).join('');
+                return `<br><br><b>${title}:</b><ul style="list-style-type: none; padding-left: 0; text-align: left; font-size: 0.9em;">${actionItemsHTML}</ul>`;
+            };
+
+            const allFoodItems = weeklyPlan.flatMap(day => [...day['Pusryčiai'], ...day['Pietūs'], ...day['Vakarienė']]);
+            const allTransportItems = weeklyPlan.flatMap(day => day['Transportas']);
+            const allGeneralActions = weeklyPlan.flatMap(day => day['Bendri veiksmai']);
+
+            let summaryHTML = '';
+            summaryHTML += createSummaryList('Pasirinktas maistas', allFoodItems);
+            summaryHTML += createSummaryList('Pasirinktas transportas', allTransportItems);
+            summaryHTML += createSummaryList('Kiti pasirinkti veiksmai', allGeneralActions);
+
+            if (currentScore >= 0) {
+                dom.endTitle.textContent = "Sveikiname! 🥳";
+                dom.endMessage.innerHTML = `Jūs sėkmingai suplanavote savaitę ir likote biudžete! Jūsų galutinis likutis: ${currentScore} eko-taškų.` + summaryHTML;
+            } else {
+                
+                dom.endMessage.innerHTML = `Viršijote biudžetą ${-currentScore} taškais.` + summaryHTML;
+            }
+            showScreen('end-screen');
+        });
+        dom.restartBtn.addEventListener('click', () => showScreen('start-screen'));
+        
+        function closeModal() {
+            if (isWednesdayEventActive) {
+                applyWednesdayDefault();
+            }
+            dom.modal.classList.remove('active');
+        }
+
+        dom.modalCloseBtn.addEventListener('click', closeModal);
+        dom.modal.addEventListener('click', (e) => { 
+            if (e.target === dom.modal) {
+                closeModal();
+            }
+        });
+        
+        function triggerWednesdayEvent() {
+            isWednesdayEventActive = true; 
+            isWednesdayEventTriggered = true; // Pažymime, kad įvykis įvyko
+            dom.modalTitle.textContent = 'Nelaimė trečiadienį!';
+            dom.modalList.innerHTML = `
+                <p style="text-align: left; margin-bottom: 20px;">Tavo išmanusis telefonas įkrito į klozetą dar nespėjus nuleisti to, kas jame plūduriuoja (dieną prieš suvalgei kebabą, kuris labai susipyko su tavo skrandžiu). Ką darai?</p>
+            `;
+
+            const choices = [
+                { text: 'Perki naują išmanųjį telefoną', points: -75, reality: 'Realybė: ~60-90 kg CO₂e. Apie 80% telefono pėdsako atsiranda gamybos metu dėl retųjų metalų kasybos, energijai imlių procesų ir transportavimo. Kiekvienas naujas telefonas yra didžiulė našta planetai.', penalty: true },
+                { text: 'Perki naudotą telefoną', points: -10, reality: 'Realybė: Poveikis artimas nuliui. Jūs neinicijuojate naujos gamybos, o pratęsiate jau pagaminto produkto gyvavimo ciklą. Pėdsaką sudaro tik transportavimas. Tai vienas efektyviausių būdų mažinti elektronikos atliekas ir resursų naudojimą.', penalty: true },
+                { text: 'Greitai bandai išgelbėti telefoną', points: 15, reality: 'Realybė: Jūs „sutaupote“ visas emisijas ir resursus, kurie būtų buvę panaudoti naujo daikto gamybai.', penalty: false }
+            ];
+
+            choices.forEach(choice => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'modal-item';
+                itemDiv.style.flexDirection = 'column';
+                itemDiv.style.alignItems = 'flex-start';
+                itemDiv.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; width: 100%;">
+                        <span>${choice.text}</span>
+                        <strong style="white-space: nowrap;">${choice.points > 0 ? '+' : ''}${choice.points} tšk.</strong>
+                    </div>
+                    <small style="margin-top: 5px; color: #555;">${choice.reality}</small>
+                `;
+                itemDiv.onclick = () => {
+                    isWednesdayEventActive = false;
+                    const eventItem = { name: choice.text, points: choice.points, reality: choice.reality };
+                    weeklyPlan[2]['Bendri veiksmai'].push(eventItem);
+                    updateScore(choice.points);
+
+                    if (choice.penalty) {
+                        const penaltyItem = { name: 'Seno telefono pavertimas elektronine atlieka', points: -5, reality: 'Išmetus telefoną į bendrą konteinerį, jis tampa pavojinga atlieka. Netinkamai tvarkoma elektronika į aplinką išskiria toksiškus metalus (šviną, gyvsidabrį), kurie kenkia ekosistemoms ir žmonių sveikatai.' };
+                        weeklyPlan[2]['Bendri veiksmai'].push(penaltyItem);
+                        updateScore(-5);
+                    }
+                    
+                    renderPlanForDay(2);
+                    dom.modal.classList.remove('active');
+                };
+                dom.modalList.appendChild(itemDiv);
+            });
+
+            dom.modal.classList.add('active');
+        }
+
+        function applyWednesdayDefault() {
+            isWednesdayEventActive = false;
+            const defaultChoice = { 
+                name: 'Gyvenimas be išmaniojo telefono', 
+                points: 20,
+                reality: 'Jūs visiškai išvengiate didžiausio asmeninės elektronikos poveikio – gamybos. Tai prilygsta (-75 tšk.) pėdsako eliminavimui kas kelerius metus. Jūs taip pat drastiškai sumažinate savo skaitmeninį pėdsaką ir energijos suvartojimą. Realybėje, 2025 metais, tai yra didžiulis iššūkis: prarandama prieiga prie mobiliosios bankininkystės, žemėlapių, momentinių žinučių programėlių, „Bolt“ ar „CityBee“ paslaugų.'
+            };
+            weeklyPlan[2]['Bendri veiksmai'].push(defaultChoice);
+            updateScore(defaultChoice.points);
+            renderPlanForDay(2);
+        }
+    });
+    </script>
+</body>
+</html>
