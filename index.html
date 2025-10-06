@@ -90,6 +90,50 @@
             padding: 0; /* Panaikiname seną padding */
         }
 
+        /* Pridėkite šį kodą į <style> žymą */
+
+        @keyframes pulse-border {
+        0% {
+            box-shadow: 0 0 0 0 rgba(44, 110, 73, 0.7);
+        }
+        70% {
+            box-shadow: 0 0 0 10px rgba(44, 110, 73, 0);
+        }
+        100% {
+            box-shadow: 0 0 0 0 rgba(44, 110, 73, 0);
+        }
+        }
+
+        .highlight-for-drop {
+        border-color: var(--primary-color);
+        border-style: solid;
+        animation: pulse-border 2s 2; /* Paleis animaciją 2 kartus */
+        }
+
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-2deg) translateX(-2px); }
+            75% { transform: rotate(2deg) translateX(2px); }
+            }
+
+            /* Klasė, kurią priskirsime pirmajam elementui */
+            .first-item-hint {
+            animation: wiggle 0.5s 3; /* Paleis animaciją 3 kartus */
+            cursor: grab; /* Pakeičia pelės žymeklį, kad būtų dar aiškiau */
+            }
+
+            /* Stilius instrukcijos tekstui šoninėje juostoje */
+            .sidebar-hint-text {
+            background-color: var(--secondary-color);
+            border: 1px solid var(--accent-color);
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 15px;
+            font-weight: bold;
+            color: var(--primary-color);
+            }
+
         .bin-btn {
             padding: 15px;
             border-radius: 8px;
@@ -386,7 +430,7 @@
         { title: 'Pozityvūs veiksmai', allowedCategories: ['Pozityvūs veiksmai'] }
     ];
 
-        let currentScore, currentDay, weeklyPlan, chosenWeeklyActions, isWednesdayEventTriggered, isWednesdayEventActive, isGameFinished;
+        let currentScore, currentDay, weeklyPlan, chosenWeeklyActions, isWednesdayEventTriggered, isWednesdayEventActive, isGameFinished, isFirstHintShown;
         const STORAGE_KEY = 'sustainabilityGameProgress'; // Key to store our game data
 
         function saveGameState() {
@@ -507,6 +551,7 @@
         // Pakeiskite visą šią funkciją
         function initGame() {
             currentScore = STARTING_POINTS; currentDay = 0; chosenWeeklyActions = []; isWednesdayEventTriggered = false; isWednesdayEventActive = false; isGameFinished = false;
+             isFirstHintShown = false; 
 
             // --- PAKEISTA DALIS: Dinamiškas weeklyPlan kūrimas ---
             weeklyPlan = Array.from({ length: 7 }, () => {
@@ -597,8 +642,19 @@
 
         // Pridėkite šią naują funkciją prie kitų JavaScript funkcijų
         // Pakeiskite visą šią funkciją
+        // Pakeiskite visą šią funkciją
         function renderActionsSidebar(categoriesToShow) {
             dom.actionsSidebar.innerHTML = ''; // Išvalome seną turinį
+            let isFirstItem = true; // Stebėsime, ar tai pirmas elementas sąraše
+
+            // --- NAUJA DALIS: VIENKARTINĖ UŽUOMINA ŠONINĖJE JUOSTOJE ---
+            if (!isFirstHintShown) {
+                const hintDiv = document.createElement('div');
+                hintDiv.className = 'sidebar-hint-text';
+                hintDiv.innerHTML = 'Dabar paspauskite, laikykite ir tempkite norimą veiksmą į planą!';
+                dom.actionsSidebar.appendChild(hintDiv);
+            }
+            // --- UŽUOMINOS PABAIGA ---
 
             const closeBtn = document.createElement('button');
             closeBtn.innerHTML = '&times; Uždaryti';
@@ -619,6 +675,18 @@
                     itemDiv.className = 'draggable-item';
                     itemDiv.draggable = true;
 
+                    // --- NAUJA DALIS: ANIMACIJOS PRIDĖJIMAS PIRMAJAM ELEMENTUI ---
+                    if (!isFirstHintShown && isFirstItem) {
+                        itemDiv.classList.add('first-item-hint');
+                        isFirstItem = false; // Nustatome, kad pirmas elementas jau rastas
+                        
+                        // Nuimame animaciją po kelių sekundžių
+                        setTimeout(() => {
+                            itemDiv.classList.remove('first-item-hint');
+                        }, 2000); // 2 sekundės
+                    }
+                    // --- ANIMACIJOS PABAIGA ---
+
                     if (item.isWeekly && chosenWeeklyActions.includes(item.name)) {
                         itemDiv.classList.add('disabled');
                         itemDiv.draggable = false;
@@ -626,16 +694,13 @@
                     
                     itemDiv.dataset.itemName = item.name;
 
-                    // Pakeitimas taškų matomumui (bus aprašytas 3 žingsnyje)
                     itemDiv.innerHTML = `
                         <span class="item-name-sidebar">${item.name}</span>
                         <strong class="item-points-sidebar">${item.points > 0 ? '+' : ''}${item.points} tšk.</strong>
                     `;
 
                     itemDiv.addEventListener('dragstart', (event) => {
-                        
                         closeSidebar();
-                        
                         if (itemDiv.classList.contains('disabled')) {
                             event.preventDefault();
                             return;
@@ -647,13 +712,18 @@
                     dom.actionsSidebar.appendChild(itemDiv);
                 });
             });
+            
+            // --- NAUJA DALIS: Pažymime, kad užuomina buvo parodyta ---
+            if (!isFirstHintShown) {
+                isFirstHintShown = true;
+            }
         }
        
                // Pakeiskite visą šią funkciją
-        function createPlanSlot(dayIndex, slotTitle, itemsInSlot, allowedCategories, highlightItemName = null) { // Pridedame naują parametrą
+        // Pakeiskite visą šią funkciją
+        function createPlanSlot(dayIndex, slotTitle, itemsInSlot, allowedCategories, highlightItemName = null) {
             const slotDiv = document.createElement('div');
             slotDiv.className = 'plan-slot';
-            // ... (kitas kodas, kuris nesikeičia) ...
             slotDiv.dataset.dayIndex = dayIndex;
             slotDiv.dataset.slotName = slotTitle;
 
@@ -664,11 +734,13 @@
             const contentDiv = document.createElement('div');
             contentDiv.className = 'slot-content';
             slotDiv.appendChild(contentDiv);
-            
+
             titleH3.addEventListener('click', () => {
                 renderActionsSidebar(allowedCategories);
                 dom.actionsSidebar.classList.add('visible');
                 dom.sidebarOverlay.classList.add('visible');
+
+                
             });
 
             if (itemsInSlot && itemsInSlot.length > 0) {
@@ -679,20 +751,17 @@
                     const li = document.createElement('li');
                     const textNode = document.createElement('span');
                     textNode.innerHTML = `• ${item.name} <strong>(${item.points > 0 ? '+' : ''}${item.points} tšk.)</strong> `;
-                    
+
                     const infoIcon = document.createElement('span');
                     infoIcon.className = 'item-info-icon';
                     infoIcon.textContent = 'ⓘ';
-                    
-                    // === NAUJA DALIS: ANIMACIJOS PRIDĖJIMAS ===
+
                     if (item.name === highlightItemName) {
                         infoIcon.classList.add('info-icon-glow');
-                        // Išvalome klasę po animacijos pabaigos, kad nebekartotų
                         setTimeout(() => {
                             infoIcon.classList.remove('info-icon-glow');
-                        }, 3000); // 3000ms = 3 sekundės
+                        }, 3000);
                     }
-                    // === PABAIGA ===
 
                     infoIcon.addEventListener('click', () => {
                         showInfoModal(item.name, item.reality || 'Papildoma informacija nepateikta.');
@@ -704,19 +773,20 @@
                 });
                 contentDiv.appendChild(list);
             } else {
-                contentDiv.innerHTML = '<p style="color: #aaa; font-style: italic; text-align: center;">Spausk ant pavadinimo, kad pridėtum</p>';
+                // Pakeičiame pradinį tekstą, kaip siūloma paprastame sprendime
+                contentDiv.innerHTML = '<p style="color: #aaa; font-style: italic; text-align: center;">Spausk ant pavadinimo, tada tempk veiksmą čia</p>';
             }
 
             slotDiv.addEventListener('dragover', (event) => {
                 event.preventDefault();
                 slotDiv.classList.add('drag-over');
             });
-            
-           slotDiv.addEventListener('drop', (event) => {
+
+            slotDiv.addEventListener('drop', (event) => {
                 event.preventDefault();
                 slotDiv.classList.remove('drag-over');
                 const itemName = event.dataTransfer.getData('text/plain');
-                
+
                 let droppedItem = null;
                 let itemCategory = null;
                 for (const category in items) {
@@ -734,14 +804,12 @@
                         return;
                     }
 
-                    // --- PRADŽIA: PAKEISTA LOGIKA RŪŠIAVIMO ŽAIDIMUI ---
                     if (droppedItem.name === 'Kruopštus rūšiavimas visą savaitę') {
                         startSortingMinigame(droppedItem, dayIndex, slotTitle);
                         closeSidebar();
-                        return; // Svarbu sustabdyti vykdymą čia!
+                        return;
                     }
-                    // --- PABAIGA: PAKEISTA LOGIKA ---
-                    
+
                     const slotKey = slotTitle === 'Buitis ir Skaitmena' ? 'Bendri veiksmai' : slotTitle;
                     if (!weeklyPlan[dayIndex][slotKey]) {
                         weeklyPlan[dayIndex][slotKey] = [];
@@ -752,7 +820,7 @@
                     if (droppedItem.isWeekly) {
                         chosenWeeklyActions.push(droppedItem.name);
                     }
-                    
+
                     renderPlanForDay(dayIndex, droppedItem.name);
                     closeSidebar();
                 }
