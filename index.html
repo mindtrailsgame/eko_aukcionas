@@ -53,19 +53,24 @@
         }
 
         #language-switcher button {
-            background-color: #f0f0f0;
-            border: 1px solid #ccc;
+            /* Style for the INACTIVE button */
+            background-color: transparent;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.7);
             border-radius: 8px;
             padding: 5px 10px;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.2s;
+            opacity: 0.8;
         }
 
         #language-switcher button.active {
-            background-color: var(--primary-color);
-            color: white;
-            border-color: var(--primary-color);
+            /* Style for the ACTIVE button */
+            background-color: #fff; /* Prominent white background */
+            color: var(--primary-color); /* Dark green text */
+            border-color: #fff;
+            opacity: 1;
         }
         .screen { display: none; flex-direction: column; height: 100%; padding: 20px; box-sizing: border-box; text-align: center; }
         .screen.active { display: flex; }
@@ -293,6 +298,21 @@
 
         .info-icon-glow {
         animation: glow 1.5s 2;
+        }
+
+        /* Stilius neaktyviam mygtukui pradiniame ekrane (šviesus fonas) */
+        .on-start-screen #language-switcher button {
+            background-color: #f0f0f0;
+            color: #333;
+            border-color: #ccc;
+            opacity: 1;
+        }
+
+        /* Stilius aktyviam mygtukui pradiniame ekrane */
+        .on-start-screen #language-switcher button.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
         }
 
     </style>
@@ -594,6 +614,7 @@
         }   
 
         const dom = {
+            phoneWrapper: document.querySelector('.phone-wrapper'), // --> ADD THIS LINE <--
             screens: document.querySelectorAll('.screen'),
             langLtBtn: document.getElementById('lang-lt-btn'),
             langEnBtn: document.getElementById('lang-en-btn'),
@@ -629,7 +650,14 @@
         let sortingSlotKey = null;
         const QUESTIONS_TO_ASK = 5;
 
-        function showScreen(screenId) { dom.screens.forEach(s => s.classList.toggle('active', s.id === screenId)); }
+        function showScreen(screenId) { dom.screens.forEach(s => s.classList.toggle('active', s.id === screenId)); 
+             if (screenId === 'start-screen') {
+                dom.phoneWrapper.classList.add('on-start-screen');
+            } else {
+                dom.phoneWrapper.classList.remove('on-start-screen');
+            }
+        }
+        
         function closeSidebar() {
             dom.actionsSidebar.classList.remove('visible');
             dom.sidebarOverlay.classList.remove('visible');
