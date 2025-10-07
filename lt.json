@@ -1,1310 +1,184 @@
-<!DOCTYPE html>
-<html lang="lt">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tvarumo Aukcionas</title>
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <style>
-        :root {
-            --primary-color: #2c6e49;
-            --secondary-color: #fefee3;
-            --accent-color: #ffc94b;
-            --danger-color: #d9534f;
-            --light-bg: #f9f9f9;
-            --info-color: #4a90e2;
-        }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            margin: 0;
-            background-color: var(--light-bg);
-            color: #333;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-        .phone-wrapper {
-            width: 100%;
-            max-width: 400px;
-            height: 100vh;
-            max-height: 800px;
-            background-color: white;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            border-radius: 20px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .phone-wrapper {
-    position: relative; /* Būtina, kad perjungiklis pozicionuotųsi pagal šį elementą */
+{
+  "general": {
+    "points_suffix": "tšk.",
+    "close": "Uždaryti",
+    "confirm": "Patvirtinti"
+  },
+  "screens": {
+    "start": {
+      "title": "Tvarumo Aukcionas 🌍",
+      "subtitle": "Suplanuokite savaitę, neviršydami 100 eko-taškų biudžeto. Sėkmės!",
+      "startButton": "Pradėti žaidimą",
+      "rulesButton": "Kaip žaisti?"
+    },
+    "game": {
+      "scoreLabel": "Likutis:",
+      "finishButton": "Baigti planavimą",
+      "sidebarHint": "Laikykite ir tempkite norimą veiksmą į planą! Veiksmų skaičius viename plane nėra ribojamas.",
+      "planSlotEmpty": "Spausk ant pavadinimo, tada tempk veiksmą čia",
+      "invalidActionTooltip": "Šis veiksmas buvo anuliuotas dėl prieštaraujančio pasirinkimo."
+    },
+    "end": {
+      "defaultTitle": "Rezultatas",
+      "title": "Savaitės rezultatai",
+      "restartButton": "Žaisti iš naujo",
+      "successMessage": "Sveikiname! 🥳 Sėkmingai suplanavote savaitę! Jūsų likutis: <span style='color: var(--primary-color); font-weight: bold;'>{score} tšk.</span>",
+      "failMessage": "Šįkart nepavyko... Viršijote biudžetą {overBudget} taškais. Jūsų likutis: <span style='color: var(--danger-color); font-weight: bold;'>{score} tšk.</span>",
+      "summaryTitle": "Savaitės poveikio suvestinė",
+      "summaryCO2": "Jūsų bendras CO₂ pėdsakas šią savaitę: <strong>{totalCo2e} kg</strong>.",
+      "summaryCar": "Tai prilygsta kelionei automobiliu: <strong>{carKmEquivalent} km</strong>.",
+      "summaryWater": "Sutaupėte: <strong>{Math.round(totalWaterSaved)} litrų vandens</strong>.",
+      "summaryBestChoice": "Jūsų tvariausias pasirinkimas: <strong>\"{mostSustainableChoiceName}\" (+{mostSustainableChoicePoints} tšk.)</strong>.",
+      "chartLabel": "CO₂ Pėdsakas (kg)",
+      "chartTitle": "Savaitės CO₂ pėdsako apžvalga",
+      "chartYAxisLabel": "CO₂e (kg)"
+    }
+  },
+  "modals": {
+    "defaultTitle": "Pasirinkite veiksmą",
+    "noInfoAvailable": "Papildoma informacija nepateikta.",
+    "rules": {
+      "title": "Žaidimo taisyklės",
+      "content": "Žaidimo tikslas paprastas – suplanuoti savaitę, kurios pabaigoje jūsų eko-taškų likutis būtų teigiamas.\n\n• Pradedate su <strong>100 eko-taškų</strong> biudžetu.\n• Kiekvienas jūsų pasirinkimas per savaitę arba pridės taškų (tvarūs veiksmai), arba juos atims (taršūs veiksmai).\n\nLaimi tas, kas sukuria tvarų ir smagų savaitės planą ir neišnaudoja viso biudžeto. Sėkmės!"
+    }
+  },
+  "alerts": {
+    "planIncomplete": "Ruošiatės badauti?",
+    "cannotAddToSlot": "\"{itemName}\" negalima pridėti į \"{slotTitle}\" laukelį.",
+    "plasticChallengeFailed": "DĖMESIO! Jūsų pasirinkimas \"{itemName}\" sulaužė įsipareigojimą nepirkti prekių plastiko pakuotėse. Jūs praradote {points} taškų.",
+    "sortingGameEnded": "Žaidimas baigtas! Teisingi atsakymai: {sortingScore}/{questionsToAsk}. GAUTI TAŠKAI: {finalPoints}."
+  },
+  "time": {
+    "weekdaysShort": ["P", "A", "T", "K", "Pn", "Š", "S"],
+    "weekdaysLong": ["Pirmadienis", "Antradienis", "Trečiadienis", "Ketvirtadienis", "Penktadienis", "Šeštadienis", "Sekmadienis"]
+  },
+  "planSlots": {
+    "breakfast": "Pusryčiai",
+    "lunch": "Pietūs",
+    "dinner": "Vakarienė",
+    "transport": "Transportas",
+    "snacks": "Užkandžiai ir gėrimai",
+    "shopping": "Pirkiniai ir pramogos",
+    "digital": "Skaitmeninis pasaulis ir buitis",
+    "positive": "Pozityvūs veiksmai"
+  },
+  "wednesdayEvent": {
+    "title": "Nelaimė trečiadienį!",
+    "prompt": "Tavo išmanusis telefonas įkrito į klozetą dar nespėjus nuleisti to, kas jame plūduriuoja (dieną prieš suvalgei kebabą, kuris labai susipyko su tavo skrandžiu). Ką darai?",
+    "choice1_text": "Perki naują išmanųjį telefoną",
+    "choice1_reality": "Realybė: ~60-90 kg CO₂e. Apie 80% telefono pėdsako atsiranda gamybos metu dėl retųjų metalų kasybos, energijai imlių procesų ir transportavimo. Kiekvienas naujas telefonas yra didžiulė našta planetai.",
+    "choice2_text": "Perki naudotą telefoną",
+    "choice2_reality": "Realybė: Poveikis artimas nuliui. Jūs neinicijuojate naujos gamybos, o pratęsiate jau pagaminto produkto gyvavimo ciklą. Pėdsaką sudaro tik transportavimas. Tai vienas efektyviausių būdų mažinti elektronikos atliekas ir resursų naudojimą.",
+    "choice3_text": "Greitai bandai išgelbėti telefoną",
+    "choice3_reality": "Realybė: Jūs „sutaupote“ visas emisijas ir resursus, kurie būtų buvę panaudoti naujo daikto gamybai.",
+    "penalty_item_name": "Seno telefono pavertimas elektronine atlieka",
+    "penalty_item_reality": "Išmetus telefoną į bendrą konteinerį, jis tampa pavojinga atlieka. Netinkamai tvarkoma elektronika į aplinką išskiria toksiškus metalus (šviną, gyvsidabrį), kurie kenkia ekosistemoms ir žmonių sveikatai.",
+    "defaultChoice_name": "Gyvenimas be išmaniojo telefono",
+    "defaultChoice_reality": "Jūs visiškai išvengiate didžiausio asmeninės elektronikos poveikio – gamybos. Tai prilygsta (-75 tšk.) pėdsako eliminavimui kas kelerius metus. Jūs taip pat drastiškai sumažinate savo skaitmeninį pėdsaką ir energijos suvartojimą. Realybėje, 2025 metais, tai yra didžiulis iššūkis: prarandama prieiga prie mobiliosios bankininkystės, žemėlapių, momentinių žinučių programėlių, „Bolt“ ar „CityBee“ paslaugų."
+  },
+  "sortingGame": {
+    "title": "Rūšiavimo Iššūkis!",
+    "progress": "Klausimas {currentSortingQuestionIndex} iš {questionsToAsk}",
+    "question": "Kur mesti: „{item}“?",
+    "feedbackCorrect": "Teisingai! ✅",
+    "feedbackIncorrect": "Neteisingai... ❌",
+    "nextButton": "Kitas klausimas →",
+    "bins": {
+      "plastikas": "Plastiką ir pakuotes",
+      "popierius": "Popierių",
+      "stiklas": "Stiklą",
+      "buitines": "Buitines atliekas",
+      "pavojingos": "Pavojingas atliekas"
+    },
+    "resultText": {
+      "perfect": "be klaidų",
+      "good": "su keliomis klaidomis",
+      "bad": "reikia pasimokyti"
+    },
+    "finalItemName": "Rūšiavimas ({sortingScore}/{questionsToAsk} teisingai, {resultText})",
+    "questions": [
+      { "item": "Sutepta picos dėžė", "correctBin": "buitines", "explanation": "Riebalais ar maisto likučiais suteptas popierius ir kartonas nėra perdirbami, todėl keliauja į buitinių atliekų konteinerį." },
+  { "item": "Stiklainis nuo agurkų", "correctBin": "stiklas", "explanation": "Švarus stiklainis be dangtelio visada keliauja į stiklo konteinerį. Dangtelis (jei metalinis) – į plastiką." },
+  { "item": "Panaudota baterija", "correctBin": "pavojingos", "explanation": "Baterijos, akumuliatoriai ir lemputės yra pavojingos atliekos. Jas reikia mesti į specialias dėžutes prekybos centruose." },
+  { "item": "Plastikinis butelis nuo gėrimo", "correctBin": "plastikas", "explanation": "Visi plastikiniai (PET) buteliai turi būti išmesti į plastiko ir pakuočių konteinerį. Geriausia – suspausti." },
+  { "item": "Perskaitytas laikraštis", "correctBin": "popierius", "explanation": "Švari makulatūra – laikraščiai, žurnalai, kartoninės dėžutės – visada keliauja į popieriaus konteinerį." },
+  { "item": "Kavos tirščiai", "correctBin": "buitines", "explanation": "Organinės kilmės atliekos, tokios kaip maisto likučiai, keliauja į buitinių atliekų konteinerį (arba kompostą, jei turite)." },
+  { "item": "Metalinė skardinė nuo konservų", "correctBin": "plastikas", "explanation": "Metalo pakuotės (skardinės, dangteliai) metamos į tą patį konteinerį kaip ir plastikas – geltonąjį." }
+    ]
+  },
+  "items": {
+    "maistas": {
+      "avienos_plovas": { "name": "Avienos plovas (patiekalas su aviena)", "reality": "Aviena yra vienas didžiausią CO2 pėdsaką turinčių mėsos produktų, kartais lenkiantis net jautieną. 1 kg avienos gali sugeneruoti virš 25 kg CO2e." },
+      "jautienos_didkepsnis": { "name": "Jautienos didkepsnis (arba mėsainis)", "reality": "Viena 200 g porcija jautienos „kainuoja“ apie 12-20 kg CO2e. Tai prilygsta maždaug 100 km kelionei automobiliu." },
+      "kiaulienos_karbonadas": { "name": "Kiaulienos karbonadas (patiekalas su kiauliena)", "reality": "Kiaulienos poveikis yra mažesnis nei jautienos, bet vis tiek ženklus. 1 kg kiaulienos „kainuoja“ apie 7-8 kg CO2e, daugiausia dėl pašarų auginimo ir mėšlo tvarkymo." },
+      "keturiu_suriu_pica": { "name": "Keturios sūrių pica (patiekalas su daug sūrio)", "reality": "Sūrio gamyba yra antras didžiausias maisto pramonės teršėjas po jautienos. 1 kg sūrio apie 10-20 kg CO2e." },
+      "cepelinai_su_mesa": { "name": "Cepelinai su mėsa ir spirgučių-grietinės padažu", "reality": "Nors bulvės yra tvarus produktas, mėsos įdaras ir ypač spirgučių bei grietinės padažas stipriai padidina patiekalo CO2 pėdsaką. Tai – pieno ir mėsos pramonės derinys." },
+      "vistienos_krutinele": { "name": "Vištienos krūtinėlė su ryžiais (patiekalas su vištiena)", "reality": "1 kg vištienos - apie 6 kg CO2e. Žymiai mažiau nei jautienos, bet vis tiek reikšmingai daugiau nei augalinio maisto." },
+      "kepta_lasisa": { "name": "Kepta lašišos filė (patiekalas su žuvimi iš fermos)", "reality": "Priklauso nuo žuvies, bet 1 kg lašišos iš fermos gamyba gali siekti apie 11 kg CO2e." },
+      "darzoviu_pica": { "name": "Daržovių pica su mažiau sūrio", "reality": "Sumažinus sūrio kiekį perpus ir pridėjus daugiau daržovių, picos CO2 pėdsakas gali sumažėti daugiau nei 40%. Sūris yra vienas taršiausių ingredientų." },
+      "bulviniai_blynai": { "name": "Bulviniai blynai su grietine", "reality": "Bulvės yra vienas tvariausių maisto produktų, tačiau grietinės gamyba reikalauja daug resursų ir sukuria emisijas. Pieno produktai yra reikšmingas šiltnamio efektą sukeliančių dujų šaltinis." },
+      "salotos_avokadu_bolivine": { "name": "Salotos su avokadu ir bolivine balanda (importuoti produktai)", "reality": "Nors poveikis mažesnis, tolimas transportavimas ir didelis vandens suvartojimas (pvz., 1 kg avokadų gali prireikti iki 2000 litrų vandens) palieka pėdsaką." },
+      "tofu_sojos_kepsneliai": { "name": "Tofu / sojos kepsneliai su daržovėmis", "reality": "Sojos produktai yra efektyvus baltymų šaltinis, kurio pėdsakas yra dešimtis kartų mažesnis nei mėsos. Poveikį šiek tiek padidina perdirbimo ir transportavimo procesai." },
+      "saltibarsciai": { "name": "Šaltibarščiai su bulvėmis", "reality": "Gana tvarus pasirinkimas! Didžiausią pėdsaką palieka kefyras (pieno produktas)." },
+      "grikiu_kose_burokeliu_sriuba": { "name": "Grikių košė ar burokėlių sriuba", "reality": "Vietiniai ir sezoniniai produktai, tokie kaip grikiai ar burokėliai, turi minimalų poveikį aplinkai. 1 kg lęšių - mažiau nei 1 kg CO2e." },
+      "lesiu_troskinys": { "name": "Sotus lęšių troškinys su sezoninėmis daržovėmis", "reality": "Puikus pasirinkimas! Ankštinės daržovės, tokios kaip lęšiai, ne tik turi mažą CO2 pėdsaką (mažiau nei 1 kg CO2e vienam kg produkto), bet ir praturtina dirvožemį azotu." },
+      "veganiski_saltibarsciai": { "name": "Veganiški šaltibarščiai (su augaliniu jogurtu)", "reality": "Pakeitus kefyrą augaline alternatyva, šaltibarščių pėdsakas tampa beveik nulinis. Tai puikus pavyzdys, kaip lengvai galima paversti tradicinį patiekalą tvaresniu." },
+      "veganiski_cepelinai": { "name": "Veganiški cepelinai su lęšių ir grybų įdaru", "reality": "Atsisakius mėsos ir grietinės, tradicinis patiekalas tampa draugišku planetai. Augaliniai įdarai drastiškai sumažina CO2 ir vandens sąnaudas." },
+      "grybu_sriuba": { "name": "Grybų sriuba (iš vietinių grybų)", "reality": "Vietiniai, laukiniai grybai yra tvarumo pavyzdys. Jų auginimui nereikia jokių papildomų išteklių, o poveikis gamtai yra minimalus. Tai vienas draugiškiausių patiekalų planetai." },
+      "salotos_su_avinzirniais": { "name": "Sočios salotos su skrudintais avinžirniais", "reality": "Sezoninės daržovės, ankštiniai produktai ir vietiniai ingredientai – tai tvarumo pagrindas. Šis patiekalas beveik nepalieka neigiamo pėdsako ir yra naudingas sveikatai." }
+    },
+    "gerimai": {
+      "energinis_gerimas": { "name": "Energinis gėrimas / gėrimas skardinėje", "reality": "Apie 0.3-0.5 kg CO2e. Didžiausią poveikį daro aliuminio skardinės gamyba, kuri yra itin imli energijai." },
+      "cappuccino_karves": { "name": "Cappuccino (su karvės pienu)", "reality": "Didžiąją dalį (virš 75%) šio gėrimo CO2 pėdsako sudaro karvės pienas. Pieno pramonė yra atsakinga už dideles metano emisijas ir reikalauja milžiniškų žemės bei vandens išteklių." },
+      "matcha_latte_karves": { "name": "Matcha latte (su karvės pienu)", "reality": "Nors pati matcha arbata yra labai tvari, karvės pieno naudojimas paverčia šį gėrimą vienu taršiausių. Pieno pėdsakas visiškai nustelbia arbatos privalumus." },
+      "kava_vienkartiniame": { "name": "Kava vienkartiniame puodelyje", "reality": "Pats popierinis puodelis su plastikiniu dangteliu turi apie 0.1 kg CO₂e pėdsaką. Per metus tai gali susidaryti į reikšmingą kiekį." },
+      "cappuccino_augalinis": { "name": "Cappuccino (su augaliniu pienu)", "reality": "Pasirinkus augalinį (pvz., avižų) pieną, gėrimo pėdsakas sumažėja apie 60-70%. Tai vienas lengviausių būdų mėgautis kava tvariau." },
+      "kava_namuose": { "name": "Kava (paruošta namuose, savo puodelyje)", "reality": "Didžiausias laimėjimas – išvengtas vienkartinis puodelis. Visgi pačios kavos pupelių auginimas, apdorojimas ir transportavimas iš tolimų šalių palieka nedidelį pėdsaką." },
+      "matcha_latte_augalinis": { "name": "Matcha latte (su augaliniu pienu)", "reality": "Tai itin tvarus pasirinkimas. Tiek matcha arbata, tiek augalinis pienas (ypač avižų) turi labai mažą poveikį aplinkai." },
+      "arbata": { "name": "Žalioji, juodoji ar vaisinė arbata", "reality": "Arbatos auginimas reikalauja mažiau išteklių nei kavos, todėl jos pėdsakas yra vienas mažiausių tarp karštųjų gėrimų. Pagrindinį poveikį sudaro vandens užvirinimas." },
+      "vanduo_is_ciaupo": { "name": "Vanduo iš čiaupo (į savo gertuvę ar puodelį)", "reality": "Realybė: Poveikis praktiškai nulinis. Gertuvės naudojimas padeda išvengti šimtų plastikinių butelių per metus." }
+    },
+    "transportas": {
+      "kelione_automobiliu": { "name": "Kelionė automobiliu (vienam/dviese)", "reality": "Vidutinis benzininis automobilis išmeta apie 170 g CO2/km. 40 km kelionė pirmyn ir atgal - apie 6.8 kg CO2e." },
+      "kelione_viesuoju": { "name": "Kelionė viešuoju transportu", "reality": "Poveikis išsidalina visiems keleiviams. Vienam žmogui tenkanti emisija 40 km kelionei yra apie 1.6 kg CO₂e." },
+      "kelione_dviraciu": { "name": "Kelionė dviračiu, paspirtuku ar pėsčiomis", "reality": "Poveikis aplinkai - praktiškai 0." }
+    },
+    "uzkandziai": {
+      "kibinas_su_aviena": { "name": "Kibinas su aviena", "reality": "Tradicinis kibinas su kapota aviena ar jautiena yra vienas taršiausių užkandžių. Avienos ir jautienos CO2 pėdsakas yra itin didelis, o sviestas tešloje prideda savo dalį. Dažnai pakuojamos į neperdirbamus popieriaus ir plastiko maišelius (su \"langeliu\") arba į bendrą plastikinį maišelį." },
+      "susiu_rinkinys": { "name": "Sušių rinkinys (su lašiša, tunu)", "reality": "Didžiausią pėdsaką palieka žuvis (ypač nykstantis tunas) ir jūros gėrybės. Taip pat prisideda importuoti ingredientai, pavyzdžiui, avokadai ir ryžiai, kurių auginimui išsiskiria daug metano. Rinkinys taip pat supakuotas į neperdirbamą vienkartinio plastiko padėklą su dangteliu." },
+      "pringles": { "name": "„Pringles\" traškučių tūtelė", "reality": "Realybė: ~0.7 kg CO₂e. Šis produktas yra „ekologinis košmaras“ dėl pakuotės. Tūtelė pagaminta iš kelių medžiagų (kartono, metalo, plastikinio dangtelio), todėl jos praktiškai neįmanoma perdirbti." },
+      "bandele_su_desrele": { "name": "Bandelė su dešrele", "reality": "Didžiausią poveikį daro perdirbta mėsa (dažniausiai kiauliena), kurios gamyba reikalauja daug išteklių. Tai kur kas taršiau nei augalinės kilmės užkandis. Prisideda ir pakuotė: prekybos centruose bandelės dažnai pakuojamos į neperdirbamus popieriaus ir plastiko maišelius (su \"langeliu\") arba į bendrą plastikinį maišelį." },
+      "traskuciu_pakelis": { "name": "„Estrella\" ar „Oho!\" traškučių pakelis", "reality": "Realybė: ~0.4-0.6 kg CO₂e. Nors pačių traškučių pėdsakas panašus, pakuotė yra šiek tiek mažesnis blogis nei „Pringles“, tačiau vis tiek pagaminta iš daugiasluoksnio, sunkiai perdirbamo plastiko ir aliuminio folijos." },
+      "sakotis": { "name": "Šakotis (gabalėlis)", "reality": "Šio deserto pėdsaką išpučia didžiulis kiekis gyvūninės kilmės produktų: kiaušinių, sviesto ir grietinės. Vieno kilogramo gamybai gali prireikti net 50 kiaušinių." },
+      "magija_surelis": { "name": "„Magija\" glaistytas sūrelis", "reality": "Realybė: ~0.3-0.5 kg CO₂e. Pieno produktų gamyba (varškė, sviestas) yra imli resursams. Taip pat prisideda neperdirbama daugiasluoksnė pakuotė." },
+      "sokoladukas_karuna": { "name": "Šokoladukas „Karūna\"", "reality": "Realybė: Poveikis labai priklauso nuo ingredientų. Pieno milteliai, palmių aliejus (dažnai susijęs su miškų kirtimu) ir netvariai auginama kakava sudaro didžiąją dalį pėdsako. Tačiau pakuotė taip pat neperdirbama – tai daugiasluoksnis plastiko ir folijos derinys." },
+      "tinginys": { "name": "Tinginys (gabalėlis)", "reality": "Desertas, kurio pagrindą sudaro sausainiai, kakava ir du pieno pramonės produktai – sviestas ir kondensuotas pienas. Būtent jie labiausiai prisideda prie neigiamo poveikio." },
+      "obuolys_morka": { "name": "Lietuviškas obuolys ar morka (be pakuotės)", "reality": "Realybė: Poveikis artimas nuliui. Vietinis, sezoninis produktas be jokios pakuotės. Pats tvariausias pasirinkimas." },
+      "coca_cola_skardine": { "name": "„Coca-Cola\" gėrimas (0.33 l skardinėje)", "reality": "Realybė: ~0.3-0.5 kg CO₂e. Aliuminio gamyba yra itin imli energijai, todėl skardinė palieka didesnį pėdsaką nei plastikinis butelis." },
+      "coca_cola_butelis": { "name": "„Coca-Cola\" gėrimas (0.5 l plastikiniame butelyje)", "reality": "Realybė: ~0.2-0.3 kg CO₂e. Plastikinis (PET) butelis gaminamas iš naftos. Prie pėdsako prisideda ne tik butelio gamyba, bet ir cukraus gamyba, transportavimas." },
+      "neptuno_vanduo": { "name": "„Neptūno\" vanduo (0.5 l plastikiniame butelyje)", "reality": "Realybė: ~0.15 kg CO₂e. Visą žalą daro plastikinė pakuotė ir transportavimas, ypač kai Lietuvoje turime aukštos kokybės vandenį iš čiaupo." },
+      "smetoniska_gira": { "name": "„Smetoniška\" gira (1 l plastikiniame butelyje)", "reality": "Realybė: ~0.3 kg CO₂e (už visą butelį). Gira dažnai yra lokalesnis produktas, reikalaujantis mažiau sudėtingų, importuojamų ingredientų ir trumpesnio transportavimo kelio." }
+    },
+    "pirkiniai": {
+      "skrydis_lektuvu": { "name": "Skrydis lėktuvu savaitgalio išvykai", "reality": "Toks skrydis į abi puses vienam asmeniui išmeta apie 250-300 kg CO2e. Tai daugiau, nei tvarus metinis CO2 biudžetas leidžia transportui." },
+      "naujas_telefonas": { "name": "Naujas išmanusis telefonas", "reality": "Apie 80% telefono CO2 pėdsako atsiranda gamybos metu. Tai sudaro apie 60-90 kg CO2e, neįskaitant retųjų metalų kasybos poveikio." },
+      "greitosios_mados_drabuzis": { "name": "Naujas greitosios mados drabužis (pvz., džinsai)", "reality": "Viena pora džinsų – apie 33 kg CO2e ir ~3,700 litrų vandens. Tai prilygsta 111 km kelionei automobiliu ir 3 metų geriamojo vandens kiekiui vienam žmogui." },
+      "humana_drabuzis": { "name": "Drabužis ar daiktas iš Humanos", "reality": "Poveikis artimas nuliui, nesukuriama nauja paklausa gamybai. Pėdsaką sudaro tik transportavimas iki parduotuvės." },
+      "apsilankymas_kine": { "name": "Apsilankymas kine", "reality": "Poveikis nedidelis, daugiausia susijęs su pastato energijos vartojimu." },
+      "pasivaiksciojimas_parke": { "name": "Pasivaikščiojimas parke / žygis miške", "reality": "Skatina ryšį su gamta, jos vertinimą ir išsaugojimą." },
+      "skaitmenine_knyga": { "name": "Skaitmeninės knygos skaitymas (e. knyga)", "reality": "Pats skaitymo ir atsisiuntimo procesas yra labai taupus (~20-50 g CO₂e). Palyginimui, naujos popierinės knygos pėdsakas - apie 1-3 kg CO2e. Tačiau didysis „bet\" yra skaitymo įrenginio (skaityklės, planšetės) gamyba, kuri siekia ~30-50 kg CO2e. Vadinasi, kad skaityklė atsipirktų ekologiškai, ja reikia perskaityti dešimtis knygų, kurias antraip būtumėte pirkę popierines. Pats tvariausias pasirinkimas - skaityti knygas iš bibliotekos!" },
+      "nauja_knyga_popierine": { "name": "Nauja knyga (popierinė)", "reality": "Vidutinė knyga palieka apie 1-3 kg CO₂e pėdsaką dėl popieriaus gamybos, spausdinimo ir transportavimo." }
+    },
+    "skaitmeninis": {
+      "video_zaidimai": { "name": "Video žaidimai galingu kompiuteriu (už dieną)", "reality": "Galingas žaidimų kompiuteris gali vartoti tiek pat energijos, kiek keli šaldytuvai. Kelios valandos žaidimo - apie 0.5-1 kg CO₂e." },
+      "chatgpt_naudojimas": { "name": "Dirbtinio intelekto (ChatGPT) aktyvus naudojimas (už dieną)", "reality": "Nors viena užklausa palieka mažą pėdsaką, intensyvus naudojimas per valandą gali sugeneruoti apie 0.5-7.5 g CO2e dėl duomenų centrų energijos." },
+      "socialiniai_tinklai": { "name": "Naršymas socialiniuose tinkluose (1-2 val. per dieną)", "reality": "Valanda naršymo sugeneruoja apie 60-120 g CO2e. „Debesis“ (cloud) iš tiesų yra didžiuliai, fiziškai egzistuojantys ir daug energijos reikalaujantys pastatai." },
+      "telefono_ikrovimas": { "name": "Išmaniojo telefono įkrovimas (už visą savaitę)", "reality": "Pats įkrovimas yra menkas (5-10 g CO₂e), bet tai priminimas apie didžiausią telefono poveikį - gamybą (60-90 kg CO₂е)." },
+      "skalbimas_dziovinimas": { "name": "Skalbimas ir džiovinimas el. džiovyklėje (už 1 ciklą)", "reality": "Džiovyklė yra vienas daugiausiai energijos vartojančių prietaisų. Vienas ciklas - apie 1-2 kg CO2e." }
+    },
+    "pozityvus": {
+      "savaite_be_plastiko": { "name": "Savaitę nepirkti nieko, kas supakuota į vienkartinį plastiką", "reality": "Mažinate plastiko taršą ir iškastinio kuro vartojimą, nes plastikas gaminamas iš naftos." },
+      "kruopstus_rusiavimas": { "name": "Kruopštus rūšiavimas visą savaitę", "reality": "Perdirbimas taupo energiją ir gamtos išteklius. Pvz., pagaminti skardinę iš perdirbto aliuminio reikia 95% mažiau energijos." }
+    }
+  }
 }
-
-        #language-switcher {
-            position: absolute;
-            top: 15px;
-            right: 20px;
-            z-index: 100; /* Užtikrina, kad bus virš kitų elementų */
-            display: flex;
-            gap: 5px;
-        }
-
-        #language-switcher button {
-            /* Style for the INACTIVE button */
-            background-color: transparent;
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.7);
-            border-radius: 8px;
-            padding: 5px 10px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.2s;
-            opacity: 0.8;
-        }
-
-        #language-switcher button.active {
-            /* Style for the ACTIVE button */
-            background-color: #fff; /* Prominent white background */
-            color: var(--primary-color); /* Dark green text */
-            border-color: #fff;
-            opacity: 1;
-        }
-        .screen { display: none; flex-direction: column; height: 100%; padding: 20px; box-sizing: border-box; text-align: center; }
-        .screen.active { display: flex; }
-        #start-screen { justify-content: center; gap: 20px; }
-        #start-screen h1 { font-size: 2.5em; color: var(--primary-color); }
-        #start-screen p { font-size: 1.1em; line-height: 1.5; }
-        #game-screen { padding: 0; }
-        .game-header { background-color: var(--primary-color); color: white; padding: 15px 20px; border-bottom: 4px solid var(--accent-color); }
-        .game-header h2 { margin: 0; font-size: 1.2em; }
-        .score-display { font-size: 2em; font-weight: bold; margin-top: 5px; transition: color 0.3s; }
-        .day-nav { display: flex; justify-content: space-around; padding: 10px 0; background-color: #f0f0f0; }
-        .day-btn { background: none; border: 2px solid transparent; padding: 8px; border-radius: 8px; font-weight: bold; cursor: pointer; }
-        .day-btn.active { border-color: var(--primary-color); background-color: var(--secondary-color); }
-        .plan-area { flex-grow: 1; padding: 20px; overflow-y: auto; text-align: left; }
-        .plan-slot { background-color: #fff; border: 1px dashed #ccc; border-radius: 8px; margin-bottom: 15px; padding: 15px; }
-        .plan-slot h3, .plan-area h2 { margin: 0 0 10px 0; color: var(--primary-color); }
-        .slot-content { min-height: 24px; }
-        .add-btn { background: none; border: none; color: var(--primary-color); font-weight: bold; font-size: 1em; cursor: pointer; }
-        .action-buttons-container { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px; }
-        .action-btn { background-color: var(--secondary-color); color: var(--primary-color); border: 1px solid var(--primary-color); padding: 10px; border-radius: 8px; text-align: center; cursor: pointer; font-weight: bold; }
-        #end-screen {
-            justify-content: flex-start; /* Pradeda turinį nuo viršaus */
-            gap: 20px;
-            overflow-y: auto; /* Prideda scroll, jei reikia */
-        }
-        .btn { padding: 15px 25px; font-size: 1.2em; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; }
-        .btn-primary { background-color: var(--accent-color); color: var(--primary-color); }
-        .btn-secondary { background-color: #eee; color: #555; }
-        #lang-selection { display: flex; gap: 10px; justify-content: center; }
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center; }
-        .modal.active { display: flex; }
-        .modal-content { background-color: white; padding: 20px; border-radius: 15px; width: 90%; max-width: 380px; max-height: 80%; overflow-y: auto; }
-        .modal-item { display: flex; align-items: center; padding: 12px; border-bottom: 1px solid #eee; cursor: pointer; gap: 10px; }
-        .modal-item:hover { background-color: var(--secondary-color); }
-        .item-name { flex-grow: 1; }
-        .item-points { font-weight: bold; white-space: nowrap; }
-        .item-info-icon { font-weight: bold; color: var(--info-color); cursor: help; border-radius: 50%; width: 20px; height: 20px; display: inline-flex; justify-content: center; align-items: center; border: 1px solid var(--info-color); }
-        .general-actions-list { list-style-type: none; padding: 0; margin-top: 10px; }
-        .general-actions-list li { background: #f0f0f0; padding: 5px 10px; border-radius: 5px; font-size: 0.9em; margin-bottom: 5px; }
-        .btn.disabled {
-            background-color: #ccc;
-            color: #888;
-            cursor: not-allowed;
-            border-color: #ccc;
-        }
-      
-        @keyframes pulse-border {
-        0% {
-            box-shadow: 0 0 0 0 rgba(44, 110, 73, 0.7);
-        }
-        70% {
-            box-shadow: 0 0 0 10px rgba(44, 110, 73, 0);
-        }
-        100% {
-            box-shadow: 0 0 0 0 rgba(44, 110, 73, 0);
-        }
-        }
-
-        .highlight-for-drop {
-        border-color: var(--primary-color);
-        border-style: solid;
-        animation: pulse-border 2s 2; /* Paleis animaciją 2 kartus */
-        }
-
-        @keyframes wiggle {
-            0%, 100% { transform: rotate(0deg); }
-            25% { transform: rotate(-2deg) translateX(-2px); }
-            75% { transform: rotate(2deg) translateX(2px); }
-            }
-
-            .first-item-hint {
-            animation: wiggle 0.5s 3; 
-            cursor: grab; 
-            }
-
-            .sidebar-hint-text {
-            background-color: var(--secondary-color);
-            border: 1px solid var(--accent-color);
-            padding: 10px;
-            border-radius: 8px;
-            text-align: center;
-            margin-bottom: 15px;
-            font-weight: bold;
-            color: var(--primary-color);
-            }
-
-        .bin-btn {
-            padding: 15px;
-            border-radius: 8px;
-            border: 2px solid;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 1em;
-            transition: transform 0.1s;
-            }
-            .bin-btn:active {
-                transform: scale(0.95);
-            }
-            .bin-btn.plastikas { background-color: #ffc94b; border-color: #e6b544; color: #333; }
-            .bin-btn.popierius { background-color: #4a90e2; border-color: #4281cb; color: white; }
-            .bin-btn.stiklas { background-color: #2c6e49; border-color: #255c3c; color: white; }
-            .bin-btn.buitines { background-color: #666; border-color: #555; color: white; }
-            .bin-btn.pavojingos { background-color: #d9534f; border-color: #c44b47; color: white; }
-
-            #sorting-feedback.correct { color: var(--primary-color); }
-            #sorting-feedback.incorrect { color: var(--danger-color); }
-
-        .game-content-wrapper {
-            display: flex;
-            width: 100%;
-            height: 100%;
-        }
-
-        .main-content {
-            flex: 1; 
-            display: flex;
-            flex-direction: column;
-        }
-
-        .actions-sidebar {
-            width: 280px; 
-            background-color: #f0f0f0;
-            border-left: 1px solid #ddd;
-            overflow-y: auto;
-            padding: 15px;
-            box-sizing: border-box;
-        }
-
-        .actions-sidebar h3 {
-            margin-top: 20px;
-            margin-bottom: 10px;
-            color: var(--primary-color);
-            border-bottom: 2px solid var(--accent-color);
-            padding-bottom: 5px;
-        }
-        .actions-sidebar h3:first-child {
-            margin-top: 0;
-        }
-
-        .draggable-item {
-            background-color: white;
-            padding: 8px 12px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            cursor: grab;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.9em;
-            transition: box-shadow 0.2s, background-color 0.2s;
-        }
-
-        .draggable-item:hover {
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-        }
-
-        .draggable-item.disabled {
-            background-color: #e9e9e9;
-            color: #999;
-            cursor: not-allowed;
-            text-decoration: line-through;
-        }
-
-        .plan-slot.drag-over {
-            border-style: solid;
-            border-color: var(--primary-color);
-            background-color: var(--secondary-color);
-        }
-
-        .item-name-sidebar {
-            flex: 1;
-            white-space: normal; 
-            padding-right: 8px; 
-        }
-
-        .item-points-sidebar {
-            white-space: nowrap;
-            text-align: right;
-        }
-        
-        .game-content-wrapper {
-            position: relative; 
-        }
-        .actions-sidebar {
-            position: absolute;
-            right: 0;
-            top: 0;
-            height: 100%;
-            z-index: 101;
-            transform: translateX(100%);
-            transition: transform 0.3s ease-in-out;
-        }
-        .actions-sidebar.visible {
-            transform: translateX(0);
-        }
-        .sidebar-overlay {
-            display: none;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.4);
-            z-index: 99;
-        }
-        .sidebar-overlay.visible {
-            display: block;
-        }
-        .plan-slot h3 {
-            cursor: pointer;
-            text-decoration: underline;
-            text-decoration-style: dotted;
-            text-decoration-color: var(--accent-color);
-        }
-
-        @keyframes glow {
-        0%, 100% {
-            box-shadow: 0 0 5px rgba(74, 144, 226, 0.5);
-        }
-        50% {
-            box-shadow: 0 0 15px 3px rgba(74, 144, 226, 1);
-        }
-        }
-
-        .info-icon-glow {
-        animation: glow 1.5s 2;
-        }
-
-        /* Stilius neaktyviam mygtukui pradiniame ekrane (šviesus fonas) */
-        .on-start-screen #language-switcher button {
-            background-color: #f0f0f0;
-            color: #333;
-            border-color: #ccc;
-            opacity: 1;
-        }
-
-        /* Stilius aktyviam mygtukui pradiniame ekrane */
-        .on-start-screen #language-switcher button.active {
-            background-color: var(--primary-color);
-            color: white;
-            border-color: var(--primary-color);
-        }
-
-    </style>
-</head>
-    <body>
-        <div class="phone-wrapper">
-            <div id="language-switcher">
-                <button id="lang-lt-btn">LT</button>
-                <button id="lang-en-btn">EN</button>
-            </div>
-
-            <div id="start-screen" class="screen active">
-                <h1 data-i18n-key="screens.start.title"></h1>
-                <p data-i18n-key="screens.start.subtitle"></p>
-                <button id="start-btn" class="btn btn-primary" data-i18n-key="screens.start.startButton"></button>
-                <button id="rules-btn" class="btn btn-secondary" data-i18n-key="screens.start.rulesButton"></button>
-            </div>
-
-        <div id="game-screen" class="screen">
-            <div class="game-content-wrapper">
-                <div id="sidebar-overlay" class="sidebar-overlay"></div>
-                
-                <div class="main-content">
-                    <header class="game-header">
-                        <h2 data-i18n-key="screens.game.scoreLabel"></h2>
-                        <div id="score" class="score-display"></div>
-                    </header>
-                    <nav class="day-nav" id="day-nav"></nav>
-                    <main class="plan-area" id="plan-area"></main>
-                    <button id="finish-btn" class="btn btn-primary" style="margin: 20px; border-radius: 8px;" data-i18n-key="screens.game.finishButton"></button>
-                </div>
-                <aside id="actions-sidebar" class="actions-sidebar"></aside>
-            </div>
-        </div>
-
-        <div id="end-screen" class="screen">
-            <h2 id="end-title" data-i18n-key="screens.end.defaultTitle"></h2>
-            <p id="end-message" style="font-size: 1.2em;"></p>
-            <button id="restart-btn" class="btn btn-primary" data-i18n-key="screens.end.restartButton"></button>
-        </div>
-
-    </div>
-
-    <div id="modal" class="modal">
-        <div class="modal-content">
-            <h3 id="modal-title" data-i18n-key="modals.defaultTitle"></h3>
-            <div id="modal-list"></div>
-            <div id="modal-footer" style="margin-top: 20px; display: flex; justify-content: space-between;">
-                <button id="modal-close-btn" class="btn btn-secondary" data-i18n-key="general.close"></button>
-                <button id="modal-confirm-btn" class="btn btn-primary" style="display: none;" data-i18n-key="general.confirm"></button>
-            </div>  
-        </div>
-    </div>
-
-    <div id="sorting-modal" class="modal">
-        <div class="modal-content" style="text-align: center;">
-            <h3 id="sorting-title" data-i18n-key="sortingGame.title"></h3>
-            <p id="sorting-progress"></p>
-            <div id="sorting-question" style="font-size: 1.3em; margin: 20px 0; font-weight: bold;"></div>
-            <div id="sorting-feedback" style="min-height: 24px; font-weight: bold; margin-bottom: 15px;"></div>
-            <div id="sorting-bins" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;"></div>
-            <div id="sorting-explanation" style="font-size: 0.9em; color: #555; margin-top: 20px; text-align: left; background: #f0f0f0; padding: 10px; border-radius: 5px; display: none;"></div>
-        </div>
-    </div>
-   
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        let myChart; 
-        
-        // --- START OF LOCALIZATION SETUP ---
-        let translations = {};
-        let currentLang = 'lt';
-
-        // Helper function to get translation by key (e.g., "screens.start.title")
-        function t(key, replacements = {}) {
-            let text = key.split('.').reduce((obj, i) => obj && obj[i], translations);
-            if (!text) return key; // Return key if translation not found
-            
-            for (const placeholder in replacements) {
-                text = text.replace(`{${placeholder}}`, replacements[placeholder]);
-            }
-            return text;
-        }
-        
-        // Asynchronously loads language JSON file
-        async function loadLanguage(lang) {
-            try {
-                const response = await fetch(`${lang}.json`);
-                if (!response.ok) {
-                    throw new Error(`Could not load ${lang}.json`);
-                }
-                translations = await response.json();
-                currentLang = lang;
-                document.documentElement.lang = lang;
-                localStorage.setItem('gameLanguage', lang);
-                console.log(`${lang} language loaded.`);
-            } catch (error) {
-                console.error("Failed to load language file:", error);
-                // Fallback to Lithuanian if English fails
-                if (lang !== 'lt') await loadLanguage('lt');
-            }
-        }
-
-        // Applies translations to all static elements with data-i18n-key attribute
-        function applyStaticTranslations() {
-            document.querySelectorAll('[data-i18n-key]').forEach(el => {
-                const key = el.getAttribute('data-i18n-key');
-                // Use textContent for most, but innerHTML might be needed if keys contain HTML tags
-                el.textContent = t(key);
-            });
-        }
-        // NAUJA FUNKCIJA, KURI PERJUNGIA KALBĄ IR ATNAUJINA VAIZDĄ
-        async function switchLanguageAndRerender(lang) {
-            if (currentLang === lang) return; // Nedarom nieko, jei kalba nepasikeitė
-
-            await loadLanguage(lang);
-            setupConstants();
-            applyStaticTranslations();
-
-            // Atnaujiname mygtukų aktyvią būseną
-            dom.langLtBtn.classList.toggle('active', lang === 'lt');
-            dom.langEnBtn.classList.toggle('active', lang === 'en');
-
-            // Patikriname, kuris ekranas matomas, ir atnaujiname jo turinį
-            const activeScreen = document.querySelector('.screen.active');
-            if (activeScreen) {
-                if (activeScreen.id === 'game-screen') {
-                    updateScore(0); // Atnaujiname taškų prierašą (tšk. / pts.)
-                    renderDayNav();
-                    renderPlanForDay(currentDay);
-                } else if (activeScreen.id === 'end-screen') {
-                    displayEndScreen(); // Perpiešiame galutinį ekraną su nauja kalba
-                }
-            }
-            
-            // Išsaugome žaidimo būseną su nauja kalba, jei žaidimas vyksta
-            if (weeklyPlan) {
-                saveGameState();
-            }
-        }
-
-
-        // --- DATA STRUCTURES (NO TEXT, ONLY KEYS) ---
-        const items = {
-            'Maistas': [
-                { nameKey: 'items.maistas.avienos_plovas.name', realityKey: 'items.maistas.avienos_plovas.reality', points: -16, co2e: 25 },
-                { nameKey: 'items.maistas.jautienos_didkepsnis.name', realityKey: 'items.maistas.jautienos_didkepsnis.reality', points: -15, co2e: 16, waterUsed: 1500 },
-                { nameKey: 'items.maistas.kiaulienos_karbonadas.name', realityKey: 'items.maistas.kiaulienos_karbonadas.reality', points: -12, co2e: 7.5 },
-                { nameKey: 'items.maistas.keturiu_suriu_pica.name', realityKey: 'items.maistas.keturiu_suriu_pica.reality', points: -10, co2e: 15, waterUsed: 1200 },
-                { nameKey: 'items.maistas.cepelinai_su_mesa.name', realityKey: 'items.maistas.cepelinai_su_mesa.reality', points: -9, co2e: 5 },
-                { nameKey: 'items.maistas.vistienos_krutinele.name', realityKey: 'items.maistas.vistienos_krutinele.reality', points: -8, co2e: 6, waterUsed: 600 },
-                { nameKey: 'items.maistas.kepta_lasisa.name', realityKey: 'items.maistas.kepta_lasisa.reality', points: -6, co2e: 11 },
-                { nameKey: 'items.maistas.darzoviu_pica.name', realityKey: 'items.maistas.darzoviu_pica.reality', points: -5, co2e: 7, waterUsed: 600 },
-                { nameKey: 'items.maistas.bulviniai_blynai.name', realityKey: 'items.maistas.bulviniai_blynai.reality', points: -4, co2e: 2 },
-                { nameKey: 'items.maistas.salotos_avokadu_bolivine.name', realityKey: 'items.maistas.salotos_avokadu_bolivine.reality', points: -4, co2e: 2, waterUsed: 1000 },
-                { nameKey: 'items.maistas.tofu_sojos_kepsneliai.name', realityKey: 'items.maistas.tofu_sojos_kepsneliai.reality', points: -3, co2e: 1.8 },
-                { nameKey: 'items.maistas.saltibarsciai.name', realityKey: 'items.maistas.saltibarsciai.reality', points: -3, co2e: 1.5 },
-                { nameKey: 'items.maistas.grikiu_kose_burokeliu_sriuba.name', realityKey: 'items.maistas.grikiu_kose_burokeliu_sriuba.reality', points: -2, co2e: 0.8, waterSaved: 500 },
-                { nameKey: 'items.maistas.lesiu_troskinys.name', realityKey: 'items.maistas.lesiu_troskinys.reality', points: -1, co2e: 0.9, waterSaved: 400 },
-                { nameKey: 'items.maistas.veganiski_saltibarsciai.name', realityKey: 'items.maistas.veganiski_saltibarsciai.reality', points: 1, co2e: 0.4, waterSaved: 150 },
-                { nameKey: 'items.maistas.veganiski_cepelinai.name', realityKey: 'items.maistas.veganiski_cepelinai.reality', points: 1, co2e: 0.5, waterSaved: 200 },
-                { nameKey: 'items.maistas.grybu_sriuba.name', realityKey: 'items.maistas.grybu_sriuba.reality', points: 2, co2e: 0.1, waterSaved: 100 },
-                { nameKey: 'items.maistas.salotos_su_avinzirniais.name', realityKey: 'items.maistas.salotos_su_avinzirniais.reality', points: 3, co2e: 0.3, waterSaved: 300 }
-            ],
-            'Gėrimai': [
-                { nameKey: 'items.gerimai.energinis_gerimas.name', realityKey: 'items.gerimai.energinis_gerimas.reality', points: -4, co2e: 0.4 },
-                { nameKey: 'items.gerimai.cappuccino_karves.name', realityKey: 'items.gerimai.cappuccino_karves.reality', points: -4, co2e: 0.46 },
-                { nameKey: 'items.gerimai.matcha_latte_karves.name', realityKey: 'items.gerimai.matcha_latte_karves.reality', points: -4, co2e: 0.43 },
-                { nameKey: 'items.gerimai.kava_vienkartiniame.name', realityKey: 'items.gerimai.kava_vienkartiniame.reality', points: -2, co2e: 0.1 },
-                { nameKey: 'items.gerimai.cappuccino_augalinis.name', realityKey: 'items.gerimai.cappuccino_augalinis.reality', points: -2, co2e: 0.16 },
-                { nameKey: 'items.gerimai.kava_namuose.name', realityKey: 'items.gerimai.kava_namuose.reality', points: -1, co2e: 0.06 },
-                { nameKey: 'items.gerimai.matcha_latte_augalinis.name', realityKey: 'items.gerimai.matcha_latte_augalinis.reality', points: -1, co2e: 0.13 },
-                { nameKey: 'items.gerimai.arbata.name', realityKey: 'items.gerimai.arbata.reality', points: 0, co2e: 0.02 },
-                { nameKey: 'items.gerimai.vanduo_is_ciaupo.name', realityKey: 'items.gerimai.vanduo_is_ciaupo.reality', points: 1, co2e: 0, waterSaved: 1.5 }
-            ],
-            'Transportas': [
-                { nameKey: 'items.transportas.kelione_automobiliu.name', realityKey: 'items.transportas.kelione_automobiliu.reality', points: -14, co2e: 6.8 },
-                { nameKey: 'items.transportas.kelione_viesuoju.name', realityKey: 'items.transportas.kelione_viesuoju.reality', points: -4, co2e: 1.6 },
-                { nameKey: 'items.transportas.kelione_dviraciu.name', realityKey: 'items.transportas.kelione_dviraciu.reality', points: 2, co2e: 0 },
-            ],
-            'Užkandžiai ir gėrimai': [
-                { nameKey: 'items.uzkandziai.kibinas_su_aviena.name', realityKey: 'items.uzkandziai.kibinas_su_aviena.reality', points: -8, co2e: 2.5 },
-                { nameKey: 'items.uzkandziai.susiu_rinkinys.name', realityKey: 'items.uzkandziai.susiu_rinkinys.reality', points: -7, co2e: 4.0 },
-                { nameKey: 'items.uzkandziai.pringles.name', realityKey: 'items.uzkandziai.pringles.reality', points: -6, co2e: 0.7 },
-                { nameKey: 'items.uzkandziai.bandele_su_desrele.name', realityKey: 'items.uzkandziai.bandele_su_desrele.reality', points: -6, co2e: 1.5 },
-                { nameKey: 'items.uzkandziai.traskuciu_pakelis.name', realityKey: 'items.uzkandziai.traskuciu_pakelis.reality', points: -5, co2e: 0.5 },
-                { nameKey: 'items.uzkandziai.sakotis.name', realityKey: 'items.uzkandziai.sakotis.reality', points: -5, co2e: 1.0 },
-                { nameKey: 'items.uzkandziai.magija_surelis.name', realityKey: 'items.uzkandziai.magija_surelis.reality', points: -4, co2e: 0.4, waterUsed: 50 },
-                { nameKey: 'items.uzkandziai.sokoladukas_karuna.name', realityKey: 'items.uzkandziai.sokoladukas_karuna.reality', points: -4, co2e: 0.3 },
-                { nameKey: 'items.uzkandziai.tinginys.name', realityKey: 'items.uzkandziai.tinginys.reality', points: -4, co2e: 0.8 },
-                { nameKey: 'items.uzkandziai.obuolys_morka.name', realityKey: 'items.uzkandziai.obuolys_morka.reality', points: 0, co2e: 0.01, waterSaved: 100 },
-                { nameKey: 'items.uzkandziai.coca_cola_skardine.name', realityKey: 'items.uzkandziai.coca_cola_skardine.reality', points: -4, co2e: 0.4 },
-                { nameKey: 'items.uzkandziai.coca_cola_butelis.name', realityKey: 'items.uzkandziai.coca_cola_butelis.reality', points: -3, co2e: 0.25 },
-                { nameKey: 'items.uzkandziai.neptuno_vanduo.name', realityKey: 'items.uzkandziai.neptuno_vanduo.reality', points: -3, co2e: 0.15 },
-                { nameKey: 'items.uzkandziai.smetoniska_gira.name', realityKey: 'items.uzkandziai.smetoniska_gira.reality', points: -2, co2e: 0.3 },
-            ],
-            'Pirkiniai ir pramogos': [
-                { nameKey: 'items.pirkiniai.skrydis_lektuvu.name', realityKey: 'items.pirkiniai.skrydis_lektuvu.reality', points: -80, isWeekly: true, co2e: 275 },
-                { nameKey: 'items.pirkiniai.naujas_telefonas.name', realityKey: 'items.pirkiniai.naujas_telefonas.reality', points: -75, co2e: 75},
-                { nameKey: 'items.pirkiniai.greitosios_mados_drabuzis.name', realityKey: 'items.pirkiniai.greitosios_mados_drabuzis.reality', points: -30, co2e: 33, waterUsed: 3700 },
-                { nameKey: 'items.pirkiniai.humana_drabuzis.name', realityKey: 'items.pirkiniai.humana_drabuzis.reality', points: -3, co2e: 0.1},
-                { nameKey: 'items.pirkiniai.apsilankymas_kine.name', realityKey: 'items.pirkiniai.apsilankymas_kine.reality', points: -5, co2e: 1.5},
-                { nameKey: 'items.pirkiniai.pasivaiksciojimas_parke.name', realityKey: 'items.pirkiniai.pasivaiksciojimas_parke.reality', points: 3, co2e: 0},
-                { nameKey: 'items.pirkiniai.skaitmenine_knyga.name', realityKey: 'items.pirkiniai.skaitmenine_knyga.reality', points: -2, co2e: 0.03},
-                { nameKey: 'items.pirkiniai.nauja_knyga_popierine.name', realityKey: 'items.pirkiniai.nauja_knyga_popierine.reality', points: -6, co2e: 2},
-            ],
-            'Skaitmeninis pasaulis ir buitis': [
-                { nameKey: 'items.skaitmeninis.video_zaidimai.name', realityKey: 'items.skaitmeninis.video_zaidimai.reality', points: -4, co2e: 0.8},
-                { nameKey: 'items.skaitmeninis.chatgpt_naudojimas.name', realityKey: 'items.skaitmeninis.chatgpt_naudojimas.reality', points: -3, co2e: 0.005},
-                { nameKey: 'items.skaitmeninis.socialiniai_tinklai.name', realityKey: 'items.skaitmeninis.socialiniai_tinklai.reality', points: -2, co2e: 0.1},
-                { nameKey: 'items.skaitmeninis.telefono_ikrovimas.name', realityKey: 'items.skaitmeninis.telefono_ikrovimas.reality', points: -1, isWeekly: true, co2e: 0.01 },
-                { nameKey: 'items.skaitmeninis.skalbimas_dziovinimas.name', realityKey: 'items.skaitmeninis.skalbimas_dziovinimas.reality', points: -5, co2e: 1.5, waterUsed: 50},
-            ],
-            'Pozityvūs veiksmai': [
-                { nameKey: 'items.pozityvus.savaite_be_plastiko.name', realityKey: 'items.pozityvus.savaite_be_plastiko.reality', points: 10, isWeekly: true, co2e: -5 },
-                { nameKey: 'items.pozityvus.kruopstus_rusiavimas.name', realityKey: 'items.pozityvus.kruopstus_rusiavimas.reality', points: 10, isWeekly: true, co2e: -2 }
-            ]
-        };
-        
-        // This list now uses the nameKeys for comparison
-        const plasticPackagingItems = [
-            'items.uzkandziai.susiu_rinkinys.name',
-            'items.uzkandziai.pringles.name',
-            'items.uzkandziai.bandele_su_desrele.name',
-            'items.uzkandziai.traskuciu_pakelis.name',
-            'items.uzkandziai.sakotis.name',
-            'items.uzkandziai.magija_surelis.name',
-            'items.uzkandziai.sokoladukas_karuna.name',
-            'items.uzkandziai.tinginys.name',
-            'items.uzkandziai.kibinas_su_aviena.name',
-            'items.pirkiniai.greitosios_mados_drabuzis.name',
-            'items.pirkiniai.naujas_telefonas.name'
-        ];
-
-        const STARTING_POINTS = 100;
-        let WEEKDAYS, DAY_NAMES, PLAN_SLOTS;
-
-        // Function to set up dynamic constants after language is loaded
-        function setupConstants() {
-            WEEKDAYS = t('time.weekdaysShort');
-            DAY_NAMES = t('time.weekdaysLong');
-            PLAN_SLOTS = [
-                { titleKey: 'planSlots.breakfast', allowedCategories: ['Maistas', 'Gėrimai'] },
-                { titleKey: 'planSlots.lunch', allowedCategories: ['Maistas', 'Gėrimai'] },
-                { titleKey: 'planSlots.dinner', allowedCategories: ['Maistas', 'Gėrimai'] },
-                { titleKey: 'planSlots.transport', allowedCategories: ['Transportas'] },
-                { titleKey: 'planSlots.snacks', allowedCategories: ['Užkandžiai ir gėrimai'] },
-                { titleKey: 'planSlots.shopping', allowedCategories: ['Pirkiniai ir pramogos'] },
-                { titleKey: 'planSlots.digital', allowedCategories: ['Skaitmeninis pasaulis ir buitis'] },
-                { titleKey: 'planSlots.positive', allowedCategories: ['Pozityvūs veiksmai'] }
-            ];
-        }
-
-        let currentScore, currentDay, weeklyPlan, chosenWeeklyActions, isWednesdayEventTriggered, isWednesdayEventActive, isGameFinished, isFirstHintShown;
-        const STORAGE_KEY = 'sustainabilityGameProgress';
-
-        function saveGameState() {
-            const gameState = {
-                currentScore, currentDay, weeklyPlan, chosenWeeklyActions, isWednesdayEventTriggered, isGameFinished,
-                lang: currentLang // Save current language
-            };
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(gameState));
-            console.log("Game saved! 💾");
-        }
-
-        async function loadGameState() {
-            const savedStateJSON = localStorage.getItem(STORAGE_KEY);
-            if (savedStateJSON) {
-                const savedState = JSON.parse(savedStateJSON);
-                
-                // Load language first
-                await loadLanguage(savedState.lang || 'lt');
-                applyStaticTranslations();
-                setupConstants();
-
-                dom.langLtBtn.classList.toggle('active', currentLang === 'lt');
-                dom.langEnBtn.classList.toggle('active', currentLang === 'en');
-
-                currentScore = savedState.currentScore;
-                currentDay = savedState.currentDay;
-                weeklyPlan = savedState.weeklyPlan;
-                chosenWeeklyActions = savedState.chosenWeeklyActions;
-                isWednesdayEventTriggered = savedState.isWednesdayEventTriggered;
-                isGameFinished = savedState.isGameFinished || false;
-
-                if (isGameFinished) {
-                    console.log("Found finished game. Showing results... 🏆");
-                    displayEndScreen();
-                } else {
-                    console.log("Found saved game. Loading... ✨");
-                    updateScore(0);
-                    renderDayNav();
-                    renderPlanForDay(currentDay);
-                    showScreen('game-screen');
-                }
-                return true;
-            }
-            return false;
-        }   
-
-        const dom = {
-            phoneWrapper: document.querySelector('.phone-wrapper'), // --> ADD THIS LINE <--
-            screens: document.querySelectorAll('.screen'),
-            langLtBtn: document.getElementById('lang-lt-btn'),
-            langEnBtn: document.getElementById('lang-en-btn'),
-            rulesBtn: document.getElementById('rules-btn'),
-            finishBtn: document.getElementById('finish-btn'),
-            restartBtn: document.getElementById('restart-btn'),
-            scoreDisplay: document.getElementById('score'),
-            dayNav: document.getElementById('day-nav'),
-            planArea: document.getElementById('plan-area'),
-            actionsSidebar: document.getElementById('actions-sidebar'),
-            endTitle: document.getElementById('end-title'),
-            endMessage: document.getElementById('end-message'),
-            modal: document.getElementById('modal'),
-            modalTitle: document.getElementById('modal-title'),
-            modalList: document.getElementById('modal-list'),
-            modalCloseBtn: document.getElementById('modal-close-btn'),
-            sidebarOverlay: document.getElementById('sidebar-overlay'),
-            sortingModal: document.getElementById('sorting-modal'),
-            sortingTitle: document.getElementById('sorting-title'),
-            sortingProgress: document.getElementById('sorting-progress'),
-            sortingQuestion: document.getElementById('sorting-question'),
-            sortingFeedback: document.getElementById('sorting-feedback'),
-            sortingBins: document.getElementById('sorting-bins'),
-            sortingExplanation: document.getElementById('sorting-explanation')
-        };
-        
-        let sortingGameActive = false;
-        let currentSortingQuestionIndex = 0;
-        let sortingScore = 0;
-        let shuffledQuestions = [];
-        let originalSortingAction = null;
-        let sortingDayIndex = null;
-        let sortingSlotKey = null;
-        const QUESTIONS_TO_ASK = 5;
-
-        function showScreen(screenId) { dom.screens.forEach(s => s.classList.toggle('active', s.id === screenId)); 
-             if (screenId === 'start-screen') {
-                dom.phoneWrapper.classList.add('on-start-screen');
-            } else {
-                dom.phoneWrapper.classList.remove('on-start-screen');
-            }
-        }
-        
-        function closeSidebar() {
-            dom.actionsSidebar.classList.remove('visible');
-            dom.sidebarOverlay.classList.remove('visible');
-        }
-
-        function getChosenPlasticItems() {
-            const chosenItems = new Set();
-            weeklyPlan.forEach(dayPlan => {
-                for (const slotKey in dayPlan) {
-                     dayPlan[slotKey].forEach(item => {
-                        if (plasticPackagingItems.includes(item.nameKey)) {
-                            chosenItems.add(t(item.nameKey));
-                        }
-            });
-        }
-            });
-            return Array.from(chosenItems);
-        }
-                
-        function showInfoModal(title, content) {
-            dom.modalTitle.textContent = title;
-            dom.modalList.innerHTML = `<p style="white-space: pre-wrap; line-height: 1.5;">${content}</p>`;
-            dom.modal.querySelector('#modal-confirm-btn').style.display = 'none';
-            dom.modal.classList.add('active');
-        }
-
-        function initGame() {
-            currentScore = STARTING_POINTS; currentDay = 0; chosenWeeklyActions = []; isWednesdayEventTriggered = false; isWednesdayEventActive = false; isGameFinished = false; isFirstHintShown = false; 
-            
-            weeklyPlan = Array.from({ length: 7 }, () => {
-                const dayPlan = {};
-                PLAN_SLOTS.forEach(slot => {
-                    // --> Pakeitimas čia <--
-                    // Naudojame permanentinį raktą, o ne išverstą pavadinimą
-                    dayPlan[slot.titleKey] = [];
-                });
-                return dayPlan;
-            });
-            
-            updateScore(0);
-            renderDayNav();
-            renderPlanForDay(currentDay);
-            showScreen('game-screen');
-            updateFinishButtonState();
-        }
-
-        function updateScore(points) {
-            if (typeof currentScore === 'undefined') return;
-            currentScore += points;
-            dom.scoreDisplay.textContent = `${currentScore}/${STARTING_POINTS} ${t('general.points_suffix')}`;
-            if (currentScore < 0) dom.scoreDisplay.style.color = '#d9534f';
-            else if (currentScore < STARTING_POINTS / 2) dom.scoreDisplay.style.color = '#ffc94b';
-            else dom.scoreDisplay.style.color = 'white';
-            
-            if (isGameFinished === false) {
-                saveGameState();
-            }
-        }
-        
-        function updateFinishButtonState() {
-            let isPlanComplete = true;
-            for (let i = 0; i < 7; i++) {
-                const dayPlan = weeklyPlan[i];
-                // --> Pakeitimas čia <--
-                // Tikriname planą naudodami permanentinius raktus
-                const foodItemsCount = (dayPlan['planSlots.breakfast']?.length || 0) + 
-                                    (dayPlan['planSlots.lunch']?.length || 0) + 
-                                    (dayPlan['planSlots.dinner']?.length || 0);
-                if (foodItemsCount < 2) {
-                    isPlanComplete = false;
-                    break; 
-                }
-            }
-            dom.finishBtn.classList.toggle('disabled', !isPlanComplete);
-        }
-
-        function renderDayNav() {
-            dom.dayNav.innerHTML = '';
-            WEEKDAYS.forEach((day, index) => {
-                const btn = document.createElement('button');
-                btn.className = 'day-btn'; btn.textContent = day;
-                btn.classList.toggle('active', index === currentDay);
-                btn.onclick = () => {
-                    currentDay = index;
-                    if (index === 2 && !isWednesdayEventTriggered) {
-                        triggerWednesdayEvent();
-                    }
-                    renderDayNav();
-                    renderPlanForDay(currentDay);
-                };
-                dom.dayNav.appendChild(btn);
-            });
-        }
-        
-        function renderPlanForDay(dayIndex, highlightItemNameKey = null) {
-            dom.planArea.innerHTML = '';
-            const title = document.createElement('h2');
-            title.textContent = DAY_NAMES[dayIndex];
-            dom.planArea.appendChild(title);
-
-            PLAN_SLOTS.forEach(slotInfo => {
-                const slotTitle = t(slotInfo.titleKey); // Išverstas pavadinimas rodymui
-                const slotKey = slotInfo.titleKey;     // Permanentinis raktas duomenims
-                
-                // --> Pakeitimas čia <--
-                // Gauname duomenis iš plano naudodami permanentinį raktą
-                const itemsInSlot = weeklyPlan[dayIndex][slotKey] || [];
-                
-                // Perduodame abu - ir pavadinimą, ir raktą - į createPlanSlot
-                dom.planArea.appendChild(createPlanSlot(dayIndex, slotTitle, slotKey, itemsInSlot, slotInfo.allowedCategories, highlightItemNameKey));
-            });
-            updateFinishButtonState();
-        }
-
-        function renderActionsSidebar(categoriesToShow) {
-            dom.actionsSidebar.innerHTML = '';
-            let isFirstItem = true;
-
-            if (!isFirstHintShown) {
-                const hintDiv = document.createElement('div');
-                hintDiv.className = 'sidebar-hint-text';
-                hintDiv.innerHTML = t('screens.game.sidebarHint');
-                dom.actionsSidebar.appendChild(hintDiv);
-            }
-
-            const closeBtn = document.createElement('button');
-            closeBtn.innerHTML = `&times; ${t('general.close')}`;
-            closeBtn.style.cssText = 'background: #ddd; width: 100%; border: none; padding: 10px; font-weight: bold; margin-bottom: 15px; border-radius: 5px; cursor: pointer;';
-            closeBtn.onclick = closeSidebar;
-            dom.actionsSidebar.appendChild(closeBtn);
-
-            categoriesToShow.forEach(categoryName => {
-                const itemsInCategory = items[categoryName];
-                if (!itemsInCategory) return;
-
-                const categoryTitle = document.createElement('h3');
-                categoryTitle.textContent = categoryName;
-                dom.actionsSidebar.appendChild(categoryTitle);
-
-                itemsInCategory.forEach(item => {
-                    const itemDiv = document.createElement('div');
-                    itemDiv.className = 'draggable-item';
-                    itemDiv.draggable = true;
-
-                    if (!isFirstHintShown && isFirstItem) {
-                        itemDiv.classList.add('first-item-hint');
-                        isFirstItem = false;
-                        setTimeout(() => { itemDiv.classList.remove('first-item-hint'); }, 2000);
-                    }
-                    
-                    if (item.isWeekly && chosenWeeklyActions.includes(item.nameKey)) {
-                        itemDiv.classList.add('disabled');
-                        itemDiv.draggable = false;
-                    }
-
-                    const plasticFreeChallengeKey = 'items.pozityvus.savaite_be_plastiko.name';
-                    if (item.nameKey === plasticFreeChallengeKey) {
-                        const chosenPlastic = getChosenPlasticItems();
-                        if (chosenPlastic.length > 0) {
-                            itemDiv.classList.add('disabled');
-                            itemDiv.draggable = false;
-                            itemDiv.addEventListener('click', () => {
-                                const conflictList = chosenPlastic.map(name => `• ${name}`).join('\n');
-                                alert(t('alerts.plasticChallengeConflict', {conflictList: conflictList}));
-                            });
-                        }
-                    }
-                    
-                    itemDiv.dataset.itemNameKey = item.nameKey;
-                    const itemName = t(item.nameKey);
-                    itemDiv.innerHTML = `
-                        <span class="item-name-sidebar">${itemName}</span>
-                        <strong class="item-points-sidebar">${item.points > 0 ? '+' : ''}${item.points} ${t('general.points_suffix')}</strong>
-                    `;
-
-                    itemDiv.addEventListener('dragstart', (event) => {
-                        closeSidebar();
-                        if (itemDiv.classList.contains('disabled')) {
-                            event.preventDefault(); return;
-                        }
-                        event.dataTransfer.setData('text/plain', item.nameKey);
-                        event.dataTransfer.effectAllowed = 'move';
-                    });
-
-                    dom.actionsSidebar.appendChild(itemDiv);
-                });
-            });
-            
-            if (!isFirstHintShown) isFirstHintShown = true;
-        }
-       
-        // --> Funkcijos parašas pasikeitė: pridėtas slotKey <--
-        function createPlanSlot(dayIndex, slotTitle, slotKey, itemsInSlot, allowedCategories, highlightItemNameKey = null) {
-            const slotDiv = document.createElement('div');
-            slotDiv.className = 'plan-slot';
-            slotDiv.dataset.dayIndex = dayIndex;
-            slotDiv.dataset.slotKey = slotKey;
-
-            const titleH3 = document.createElement('h3');
-            titleH3.textContent = slotTitle;
-            slotDiv.appendChild(titleH3);
-
-            const contentDiv = document.createElement('div');
-            contentDiv.className = 'slot-content';
-            slotDiv.appendChild(contentDiv);
-
-            titleH3.addEventListener('click', () => {
-                renderActionsSidebar(allowedCategories);
-                dom.actionsSidebar.classList.add('visible');
-                dom.sidebarOverlay.classList.add('visible');
-            });
-
-            if (itemsInSlot && itemsInSlot.length > 0) {
-                const list = document.createElement('ul');
-                list.className = 'general-actions-list';
-
-                itemsInSlot.forEach(item => {
-                    const li = document.createElement('li');
-                    if (item.invalidated) {
-                        li.style.textDecoration = 'line-through';
-                        li.style.color = '#aaa';
-                        li.title = t('screens.game.invalidActionTooltip');
-                    }
-
-                    // --> Pakeitimas čia: tikriname, ar tai specialus rūšiavimo rezultatas <--
-                    let itemName;
-                    if (item.type === 'sortingResult') {
-                        // Jei taip, sukonstruojame pavadinimą iš duomenų
-                        itemName = t('sortingGame.finalItemName', {
-                            sortingScore: item.data.score,
-                            questionsToAsk: item.data.total,
-                            resultText: t(item.data.resultKey)
-                        });
-                    } else {
-                        // Kitu atveju, naudojame standartinę logiką
-                        itemName = t(item.nameKey);
-                    }
-                    
-                    const itemReality = t(item.realityKey) || t('modals.noInfoAvailable');
-
-                    const textNode = document.createElement('span');
-                    textNode.innerHTML = `• ${itemName} <strong>(${item.points > 0 ? '+' : ''}${item.points} ${t('general.points_suffix')})</strong> `;
-
-                    const infoIcon = document.createElement('span');
-                    infoIcon.className = 'item-info-icon'; infoIcon.textContent = 'ⓘ';
-                    
-                    if (item.nameKey === highlightItemNameKey) { // This highlight might not work for sorting result, but it's a minor issue
-                        infoIcon.classList.add('info-icon-glow');
-                        setTimeout(() => infoIcon.classList.remove('info-icon-glow'), 3000);
-                    }
-
-                    infoIcon.addEventListener('click', () => showInfoModal(itemName, itemReality));
-
-                    li.appendChild(textNode);
-                    li.appendChild(infoIcon);
-                    list.appendChild(li);
-                });
-                contentDiv.appendChild(list);
-            } else {
-                contentDiv.innerHTML = `<p style="color: #aaa; font-style: italic; text-align: center;">${t('screens.game.planSlotEmpty')}</p>`;
-            }
-
-            slotDiv.addEventListener('dragover', (e) => { e.preventDefault(); slotDiv.classList.add('drag-over'); });
-            slotDiv.addEventListener('dragleave', () => slotDiv.classList.remove('drag-over'));
-
-            slotDiv.addEventListener('drop', (event) => {
-                event.preventDefault();
-                slotDiv.classList.remove('drag-over');
-                const itemNameKey = event.dataTransfer.getData('text/plain');
-
-                let droppedItem = null, itemCategory = null;
-                for (const category in items) {
-                    const found = items[category].find(i => i.nameKey === itemNameKey);
-                    if (found) { droppedItem = found; itemCategory = category; break; }
-                }
-
-                if (droppedItem) {
-                    if (!allowedCategories.includes(itemCategory)) {
-                        alert(t('alerts.cannotAddToSlot', {itemName: t(droppedItem.nameKey), slotTitle: slotTitle}));
-                        return;
-                    }
-
-                    if (droppedItem.nameKey === 'items.pozityvus.kruopstus_rusiavimas.name') {
-                        startSortingMinigame(droppedItem, dayIndex, slotKey);
-                        closeSidebar(); return;
-                    }
-                    
-                    if (!weeklyPlan[dayIndex][slotKey]) weeklyPlan[dayIndex][slotKey] = [];
-                    weeklyPlan[dayIndex][slotKey].push(droppedItem);
-                    
-                    updateScore(droppedItem.points);
-
-                    if (droppedItem.isWeekly) chosenWeeklyActions.push(droppedItem.nameKey);
-                    
-                    const plasticFreeChallengeKey = 'items.pozityvus.savaite_be_plastiko.name';
-                    const isPlasticFreeWeekChosen = chosenWeeklyActions.includes(plasticFreeChallengeKey);
-                    const isItemInPlastic = plasticPackagingItems.includes(droppedItem.nameKey);
-
-                    if (isPlasticFreeWeekChosen && isItemInPlastic) {
-                        let challengeItem = null;
-                        for (const day of weeklyPlan) {
-                            for (const key in day) {
-                                const found = day[key].find(it => it.nameKey === plasticFreeChallengeKey && !it.invalidated);
-                                if (found) { challengeItem = found; break; }
-                            }
-                            if (challengeItem) break;
-                        }
-
-                        if (challengeItem) {
-                            challengeItem.invalidated = true;
-                            updateScore(-challengeItem.points);
-                            setTimeout(() => {
-                                alert(t('alerts.plasticChallengeFailed', {itemName: t(droppedItem.nameKey), points: challengeItem.points}));
-                            }, 100);
-                        }
-                    }
-
-                    renderPlanForDay(dayIndex, droppedItem.nameKey);
-                    closeSidebar();
-                }
-            });
-            return slotDiv;
-        }
-        
-        function displayEndScreen() {
-            let totalCo2e = 0, totalWaterSaved = 0;
-            let mostSustainableChoice = null;
-            let summaryHTML = '<div style="border-top: 1px solid #eee; margin-top: 20px; padding-top: 10px;"></div>';
-
-            const allChosenItems = weeklyPlan.flatMap(dayPlan => Object.values(dayPlan).flat());
-            
-            allChosenItems.forEach(item => {
-                if (item.co2e) totalCo2e += item.co2e;
-                if (item.waterSaved) totalWaterSaved += item.waterSaved;
-                if (!mostSustainableChoice || (item.points > 0 && item.points > mostSustainableChoice.points)) {
-                    mostSustainableChoice = item;
-                }
-            });
-
-            const carKmEquivalent = Math.round(totalCo2e * 5.88);
-            let mostSustainableChoiceHTML = mostSustainableChoice ? `<li>${t('screens.end.summaryBestChoice', {mostSustainableChoiceName: t(mostSustainableChoice.nameKey), mostSustainableChoicePoints: mostSustainableChoice.points})}</li>` : '';
-            
-            let infographicHTML = `
-                <div style="background-color: #f0f0f0; border-radius: 8px; padding: 15px; margin-bottom: 20px; text-align: left;">
-                    <h3 style="margin-top: 0; margin-bottom: 8px; color: var(--primary-color);">${t('screens.end.summaryTitle')}</h3>
-                    <div style="width: 100%; max-width: 350px; margin: 15px auto;"><canvas id="resultsChart"></canvas></div>
-                    <ul style="list-style-type: '➡️ '; padding-left: 20px; margin-top: 0;">
-                        <li>${t('screens.end.summaryCO2', {totalCo2e: totalCo2e.toFixed(1)})}</li>
-                        <li>${t('screens.end.summaryCar', {carKmEquivalent: carKmEquivalent})}</li>
-                        <li>${t('screens.end.summaryWater', {totalWaterSaved: Math.round(totalWaterSaved)})}</li>
-                        ${mostSustainableChoiceHTML}
-                    </ul>
-                </div>`;
-
-            weeklyPlan.forEach((dayPlan, dayIndex) => {
-                const allDailyItems = Object.values(dayPlan).flat();
-                if (allDailyItems.length > 0) {
-                    summaryHTML += `<h4 style="margin-top: 15px; margin-bottom: 5px; color: var(--primary-color); text-align: left;">${DAY_NAMES[dayIndex]}</h4>`;
-                    const dailyItemsHTML = allDailyItems.map(item =>
-                        `<li>• ${t(item.nameKey)} <span style="font-weight: bold;">(${item.points > 0 ? '+' : ''}${item.points} ${t('general.points_suffix')})</span></li>`
-                    ).join('');
-                    summaryHTML += `<ul style="list-style-type: none; padding-left: 0; text-align: left; font-size: 0.9em; margin: 0;">${dailyItemsHTML}</ul>`;
-                }
-            });
-
-            dom.endTitle.textContent = t('screens.end.title');
-            if (currentScore >= 0) {
-                dom.endMessage.innerHTML = t('screens.end.successMessage', {score: currentScore}) + infographicHTML;
-            } else {
-                dom.endMessage.innerHTML = t('screens.end.failMessage', {score: currentScore, overBudget: -currentScore}) + infographicHTML;
-            }
-            
-            dom.endMessage.insertAdjacentHTML('beforeend', summaryHTML);
-            showScreen('end-screen');
-            
-            setTimeout(() => {
-                const dailyCo2Data = weeklyPlan.map(dayPlan => Object.values(dayPlan).flat().reduce((sum, item) => sum + (item.co2e || 0), 0));
-
-                if (myChart) myChart.destroy();
-
-                const ctx = document.getElementById('resultsChart').getContext('2d');
-                myChart = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: DAY_NAMES,
-                        datasets: [{
-                            label: t('screens.end.chartLabel'),
-                            data: dailyCo2Data,
-                            backgroundColor: dailyCo2Data.map(v => v > 0 ? 'rgba(217, 83, 79, 0.6)' : 'rgba(44, 110, 73, 0.6)'),
-                            borderColor: dailyCo2Data.map(v => v > 0 ? 'rgba(217, 83, 79, 1)' : 'rgba(44, 110, 73, 1)'),
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        responsive: true, animation: { duration: 1500, easing: 'easeInOutQuad' },
-                        plugins: { legend: { display: false }, title: { display: true, text: t('screens.end.chartTitle') }},
-                        scales: { y: { beginAtZero: true, title: { display: true, text: t('screens.end.chartYAxisLabel') }}}
-                    }
-                });
-            }, 50);
-        }
-        
-        async function startGame(lang) {
-            await loadLanguage(lang);
-            applyStaticTranslations();
-            setupConstants();
-            dom.rulesBtn.style.display = 'inline-block'; // Show rules button
-            localStorage.removeItem(STORAGE_KEY);
-            initGame();
-        }
-        
-            dom.langLtBtn.addEventListener('click', () => switchLanguageAndRerender('lt'));
-            dom.langEnBtn.addEventListener('click', () => switchLanguageAndRerender('en'));
-
-            // Priskiriame veiksmą naujam "Pradėti" mygtukui
-            dom.startBtn = document.getElementById('start-btn'); // Būtinai priskirkite jį prie dom objekto
-            dom.startBtn.addEventListener('click', () => {
-                localStorage.removeItem(STORAGE_KEY);
-                initGame();
-            });
-
-            dom.rulesBtn.addEventListener('click', () => {
-            showInfoModal(t('modals.rules.title'), t('modals.rules.content'));
-        });
-        dom.finishBtn.addEventListener('click', () => {
-            if (dom.finishBtn.classList.contains('disabled')) {
-                alert(t('alerts.planIncomplete'));
-                return;
-            }
-            isGameFinished = true;
-            saveGameState();
-            displayEndScreen();
-        });
-
-        dom.restartBtn.addEventListener('click', () => {
-            localStorage.removeItem(STORAGE_KEY);
-            showScreen('start-screen');
-        });
-
-        dom.sidebarOverlay.addEventListener('click', closeSidebar);
-            
-        function closeModal() {
-            if (isWednesdayEventActive) applyWednesdayDefault();
-            dom.modal.classList.remove('active');
-        }
-
-        dom.modalCloseBtn.addEventListener('click', closeModal);
-        dom.modal.addEventListener('click', (e) => { if (e.target === dom.modal) closeModal(); });
-        
-        function triggerWednesdayEvent() {
-            isWednesdayEventActive = true; 
-            isWednesdayEventTriggered = true;
-            dom.modalTitle.textContent = t('wednesdayEvent.title');
-            dom.modalList.innerHTML = `<p style="text-align: left; margin-bottom: 20px;">${t('wednesdayEvent.prompt')}</p>`;
-
-            const choices = [
-                { textKey: 'wednesdayEvent.choice1_text', realityKey: 'wednesdayEvent.choice1_reality', points: -75, penalty: true },
-                { textKey: 'wednesdayEvent.choice2_text', realityKey: 'wednesdayEvent.choice2_reality', points: -10, penalty: true },
-                { textKey: 'wednesdayEvent.choice3_text', realityKey: 'wednesdayEvent.choice3_reality', points: 15, penalty: false }
-            ];
-
-            choices.forEach(choice => {
-                const itemDiv = document.createElement('div');
-                itemDiv.className = 'modal-item';
-                itemDiv.style.flexDirection = 'column';
-                itemDiv.style.alignItems = 'flex-start';
-                itemDiv.innerHTML = `
-                    <div style="display: flex; justify-content: space-between; width: 100%;">
-                        <span>${t(choice.textKey)}</span>
-                        <strong style="white-space: nowrap;">${choice.points > 0 ? '+' : ''}${choice.points} ${t('general.points_suffix')}</strong>
-                    </div>
-                    <small style="margin-top: 5px; color: #555;">${t(choice.realityKey)}</small>
-                `;
-                itemDiv.onclick = () => {
-                    isWednesdayEventActive = false;
-                    const eventItem = { nameKey: choice.textKey, realityKey: choice.realityKey, points: choice.points };
-                    // --> Pakeitimas čia <--
-                    weeklyPlan[2]['planSlots.digital'].push(eventItem);
-                    updateScore(choice.points);
-
-                    if (choice.penalty) {
-                        const penaltyItem = { nameKey: 'wednesdayEvent.penalty_item_name', realityKey: 'wednesdayEvent.penalty_item_reality', points: -5 };
-                        // --> Pakeitimas čia <--
-                        weeklyPlan[2]['planSlots.digital'].push(penaltyItem);
-                        updateScore(-5);
-                    }
-                    renderPlanForDay(2);
-                    dom.modal.classList.remove('active');
-                };
-                dom.modalList.appendChild(itemDiv);
-            });
-            dom.modal.classList.add('active');
-        }
-
-        function applyWednesdayDefault() {
-            isWednesdayEventActive = false;
-            const defaultChoice = { 
-                nameKey: 'wednesdayEvent.defaultChoice_name', 
-                realityKey: 'wednesdayEvent.defaultChoice_reality',
-                points: 20
-            };
-            // --> Pakeitimas čia <--
-            weeklyPlan[2]['planSlots.digital'].push(defaultChoice);
-            updateScore(defaultChoice.points);
-            renderPlanForDay(2);
-        }
-
-        // --> Funkcijos parašas pasikeitė: priima slotKey <--
-        // --- PRADŽIA: Funkcijos rūšiavimo mini žaidimui ---
-        
-        function startSortingMinigame(item, dayIdx, slotKey) {
-            sortingGameActive = true;
-            originalSortingAction = item;
-            sortingDayIndex = dayIdx;
-            sortingSlotKey = slotKey;
-
-            currentSortingQuestionIndex = 0;
-            sortingScore = 0;
-            
-            // Dabar tiesiog nukopijuojame klausimus, nebereikia sudėtingo map'inimo
-            const gameQuestions = [...translations.sortingGame.questions];
-
-            shuffledQuestions = gameQuestions.sort(() => 0.5 - Math.random()).slice(0, QUESTIONS_TO_ASK);
-
-            dom.sortingModal.classList.add('active');
-            displayNextSortingQuestion();
-        }
-
-        function displayNextSortingQuestion() {
-            dom.sortingFeedback.textContent = '';
-            dom.sortingExplanation.style.display = 'none';
-
-            if (currentSortingQuestionIndex >= shuffledQuestions.length) {
-                endSortingMinigame();
-                return;
-            }
-
-            const question = shuffledQuestions[currentSortingQuestionIndex];
-            dom.sortingProgress.textContent = t('sortingGame.progress', {currentSortingQuestionIndex: currentSortingQuestionIndex + 1, questionsToAsk: QUESTIONS_TO_ASK});
-            dom.sortingQuestion.textContent = t('sortingGame.question', {item: question.item});
-            
-            dom.sortingBins.innerHTML = '';
-            const bins = t('sortingGame.bins');
-
-            for (const binKey in bins) {
-                const button = document.createElement('button');
-                button.textContent = bins[binKey];
-                button.className = `bin-btn ${binKey}`;
-                button.onclick = () => checkSortingAnswer(binKey, question.correctBin, question.explanation);
-                dom.sortingBins.appendChild(button);
-            }
-        }
-
-        function checkSortingAnswer(chosenBin, correctBin, explanation) {
-            if (chosenBin === correctBin) {
-                sortingScore++;
-                dom.sortingFeedback.textContent = t('sortingGame.feedbackCorrect');
-                dom.sortingFeedback.className = 'correct';
-            } else {
-                dom.sortingFeedback.textContent = t('sortingGame.feedbackIncorrect');
-                dom.sortingFeedback.className = 'incorrect';
-            }
-            dom.sortingExplanation.textContent = explanation;
-            dom.sortingExplanation.style.display = 'block';
-
-            dom.sortingBins.querySelectorAll('button').forEach(btn => btn.disabled = true);
-
-            const nextButton = document.createElement('button');
-            nextButton.textContent = t('sortingGame.nextButton');
-            nextButton.className = 'btn btn-primary'; 
-            nextButton.style.cssText = 'width: 100%; margin-top: 10px;';
-            nextButton.onclick = () => { currentSortingQuestionIndex++; displayNextSortingQuestion(); };
-            
-            dom.sortingBins.innerHTML = '';
-            dom.sortingBins.style.gridTemplateColumns = '1fr';
-            dom.sortingBins.appendChild(nextButton);
-        }
-
-        function endSortingMinigame() {
-            sortingGameActive = false;
-            let finalPoints = 0;
-            let resultKey = ''; // Vietoj teksto, saugosime rakto pavadinimą
-
-            if (sortingScore === QUESTIONS_TO_ASK) {
-                finalPoints = originalSortingAction.points;
-                resultKey = 'sortingGame.resultText.perfect';
-            } else if (sortingScore >= QUESTIONS_TO_ASK - 2) {
-                finalPoints = Math.round(originalSortingAction.points / 2);
-                resultKey = 'sortingGame.resultText.good';
-            } else {
-                finalPoints = 0;
-                resultKey = 'sortingGame.resultText.bad';
-            }
-            
-            // --> Pakeitimas čia: sukuriame naujo tipo objektą su duomenimis <--
-            const resultItem = {
-                type: 'sortingResult', // Specialus tipas, kad atpažintume šį įrašą
-                points: finalPoints,
-                realityKey: originalSortingAction.realityKey,
-                // Išsaugome pačius duomenis, o ne sugeneruotą tekstą
-                data: {
-                    score: sortingScore,
-                    total: QUESTIONS_TO_ASK,
-                    resultKey: resultKey 
-                }
-            };
-            
-            if (!weeklyPlan[sortingDayIndex][sortingSlotKey]) {
-                weeklyPlan[sortingDayIndex][sortingSlotKey] = [];
-            }
-            weeklyPlan[sortingDayIndex][sortingSlotKey].push(resultItem);
-            
-            if (originalSortingAction.isWeekly) {
-                chosenWeeklyActions.push(originalSortingAction.nameKey);
-            }
-
-            updateScore(finalPoints);
-            renderPlanForDay(sortingDayIndex);
-            
-            dom.sortingModal.classList.remove('active');
-            alert(t('alerts.sortingGameEnded', {sortingScore: sortingScore, questionsToAsk: QUESTIONS_TO_ASK, finalPoints: finalPoints}));
-        }
-// --- PABAIGA: Funkcijos rūšiavimo mini žaidimui ---
-
-        // --- INITIAL PAGE LOAD ---
-        // --- INITIAL PAGE LOAD ---
-        // --- INITIAL PAGE LOAD ---
-        (async () => {
-            // First, try to load an existing game from localStorage.
-            const gameWasLoaded = await loadGameState();
-
-            // If no game was loaded (i.e., it's a fresh start), 
-            // then set up the default start screen.
-            if (!gameWasLoaded) {
-                const savedLang = localStorage.getItem('gameLanguage') || 'lt';
-                await loadLanguage(savedLang);
-                applyStaticTranslations();
-                setupConstants();
-
-                dom.langLtBtn.classList.toggle('active', savedLang === 'lt');
-                dom.langEnBtn.classList.toggle('active', savedLang === 'en');
-
-                showScreen('start-screen');
-            }
-        })();
-
-    });
-    </script>
-</body>
-</html>
