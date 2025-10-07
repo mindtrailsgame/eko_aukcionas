@@ -1,0 +1,184 @@
+{
+  "general": {
+    "points_suffix": "tšk.",
+    "close": "Uždaryti",
+    "confirm": "Patvirtinti"
+  },
+  "screens": {
+    "start": {
+      "title": "Tvarumo Aukcionas 🌍",
+      "subtitle": "Suplanuokite savaitę, neviršydami 100 eko-taškų biudžeto. Sėkmės!",
+      "startButton": "Pradėti žaidimą",
+      "rulesButton": "Kaip žaisti?"
+    },
+    "game": {
+      "scoreLabel": "Likutis:",
+      "finishButton": "Baigti planavimą",
+      "sidebarHint": "Laikykite ir tempkite norimą veiksmą į planą! Veiksmų skaičius viename plane nėra ribojamas.",
+      "planSlotEmpty": "Spausk ant pavadinimo, tada tempk veiksmą čia",
+      "invalidActionTooltip": "Šis veiksmas buvo anuliuotas dėl prieštaraujančio pasirinkimo."
+    },
+    "end": {
+      "defaultTitle": "Rezultatas",
+      "title": "Savaitės rezultatai",
+      "restartButton": "Žaisti iš naujo",
+      "successMessage": "Sveikiname! 🥳 Sėkmingai suplanavote savaitę! Jūsų likutis: <span style='color: var(--primary-color); font-weight: bold;'>{score} tšk.</span>",
+      "failMessage": "Šįkart nepavyko... Viršijote biudžetą {overBudget} taškais. Jūsų likutis: <span style='color: var(--danger-color); font-weight: bold;'>{score} tšk.</span>",
+      "summaryTitle": "Savaitės poveikio suvestinė",
+      "summaryCO2": "Jūsų bendras CO₂ pėdsakas šią savaitę: <strong>{totalCo2e} kg</strong>.",
+      "summaryCar": "Tai prilygsta kelionei automobiliu: <strong>{carKmEquivalent} km</strong>.",
+      "summaryWater": "Sutaupėte: <strong>{Math.round(totalWaterSaved)} litrų vandens</strong>.",
+      "summaryBestChoice": "Jūsų tvariausias pasirinkimas: <strong>\"{mostSustainableChoiceName}\" (+{mostSustainableChoicePoints} tšk.)</strong>.",
+      "chartLabel": "CO₂ Pėdsakas (kg)",
+      "chartTitle": "Savaitės CO₂ pėdsako apžvalga",
+      "chartYAxisLabel": "CO₂e (kg)"
+    }
+  },
+  "modals": {
+    "defaultTitle": "Pasirinkite veiksmą",
+    "noInfoAvailable": "Papildoma informacija nepateikta.",
+    "rules": {
+      "title": "Žaidimo taisyklės",
+      "content": "Žaidimo tikslas paprastas – suplanuoti savaitę, kurios pabaigoje jūsų eko-taškų likutis būtų teigiamas.\n\n• Pradedate su <strong>100 eko-taškų</strong> biudžetu.\n• Kiekvienas jūsų pasirinkimas per savaitę arba pridės taškų (tvarūs veiksmai), arba juos atims (taršūs veiksmai).\n\nLaimi tas, kas sukuria tvarų ir smagų savaitės planą ir neišnaudoja viso biudžeto. Sėkmės!"
+    }
+  },
+  "alerts": {
+    "planIncomplete": "Ruošiatės badauti?",
+    "cannotAddToSlot": "\"{itemName}\" negalima pridėti į \"{slotTitle}\" laukelį.",
+    "plasticChallengeFailed": "DĖMESIO! Jūsų pasirinkimas \"{itemName}\" sulaužė įsipareigojimą nepirkti prekių plastiko pakuotėse. Jūs praradote {points} taškų.",
+    "sortingGameEnded": "Žaidimas baigtas! Teisingi atsakymai: {sortingScore}/{questionsToAsk}. GAUTI TAŠKAI: {finalPoints}."
+  },
+  "time": {
+    "weekdaysShort": ["P", "A", "T", "K", "Pn", "Š", "S"],
+    "weekdaysLong": ["Pirmadienis", "Antradienis", "Trečiadienis", "Ketvirtadienis", "Penktadienis", "Šeštadienis", "Sekmadienis"]
+  },
+  "planSlots": {
+    "breakfast": "Pusryčiai",
+    "lunch": "Pietūs",
+    "dinner": "Vakarienė",
+    "transport": "Transportas",
+    "snacks": "Užkandžiai ir gėrimai",
+    "shopping": "Pirkiniai ir pramogos",
+    "digital": "Skaitmeninis pasaulis ir buitis",
+    "positive": "Pozityvūs veiksmai"
+  },
+  "wednesdayEvent": {
+    "title": "Nelaimė trečiadienį!",
+    "prompt": "Tavo išmanusis telefonas įkrito į klozetą dar nespėjus nuleisti to, kas jame plūduriuoja (dieną prieš suvalgei kebabą, kuris labai susipyko su tavo skrandžiu). Ką darai?",
+    "choice1_text": "Perki naują išmanųjį telefoną",
+    "choice1_reality": "Realybė: ~60-90 kg CO₂e. Apie 80% telefono pėdsako atsiranda gamybos metu dėl retųjų metalų kasybos, energijai imlių procesų ir transportavimo. Kiekvienas naujas telefonas yra didžiulė našta planetai.",
+    "choice2_text": "Perki naudotą telefoną",
+    "choice2_reality": "Realybė: Poveikis artimas nuliui. Jūs neinicijuojate naujos gamybos, o pratęsiate jau pagaminto produkto gyvavimo ciklą. Pėdsaką sudaro tik transportavimas. Tai vienas efektyviausių būdų mažinti elektronikos atliekas ir resursų naudojimą.",
+    "choice3_text": "Greitai bandai išgelbėti telefoną",
+    "choice3_reality": "Realybė: Jūs „sutaupote“ visas emisijas ir resursus, kurie būtų buvę panaudoti naujo daikto gamybai.",
+    "penalty_item_name": "Seno telefono pavertimas elektronine atlieka",
+    "penalty_item_reality": "Išmetus telefoną į bendrą konteinerį, jis tampa pavojinga atlieka. Netinkamai tvarkoma elektronika į aplinką išskiria toksiškus metalus (šviną, gyvsidabrį), kurie kenkia ekosistemoms ir žmonių sveikatai.",
+    "defaultChoice_name": "Gyvenimas be išmaniojo telefono",
+    "defaultChoice_reality": "Jūs visiškai išvengiate didžiausio asmeninės elektronikos poveikio – gamybos. Tai prilygsta (-75 tšk.) pėdsako eliminavimui kas kelerius metus. Jūs taip pat drastiškai sumažinate savo skaitmeninį pėdsaką ir energijos suvartojimą. Realybėje, 2025 metais, tai yra didžiulis iššūkis: prarandama prieiga prie mobiliosios bankininkystės, žemėlapių, momentinių žinučių programėlių, „Bolt“ ar „CityBee“ paslaugų."
+  },
+  "sortingGame": {
+    "title": "Rūšiavimo Iššūkis!",
+    "progress": "Klausimas {currentSortingQuestionIndex} iš {questionsToAsk}",
+    "question": "Kur mesti: „{item}“?",
+    "feedbackCorrect": "Teisingai! ✅",
+    "feedbackIncorrect": "Neteisingai... ❌",
+    "nextButton": "Kitas klausimas →",
+    "bins": {
+      "plastikas": "Plastiką ir pakuotes",
+      "popierius": "Popierių",
+      "stiklas": "Stiklą",
+      "buitines": "Buitines atliekas",
+      "pavojingos": "Pavojingas atliekas"
+    },
+    "resultText": {
+      "perfect": "be klaidų",
+      "good": "su keliomis klaidomis",
+      "bad": "reikia pasimokyti"
+    },
+    "finalItemName": "Rūšiavimas ({sortingScore}/{questionsToAsk} teisingai, {resultText})",
+    "questions": [
+      { "item": "Sutepta picos dėžė", "explanation": "Riebalais ar maisto likučiais suteptas popierius ir kartonas nėra perdirbami, todėl keliauja į buitinių atliekų konteinerį." },
+      { "item": "Stiklainis nuo agurkų", "explanation": "Švarus stiklainis be dangtelio visada keliauja į stiklo konteinerį. Dangtelis (jei metalinis) – į plastiką." },
+      { "item": "Panaudota baterija", "explanation": "Baterijos, akumuliatoriai ir lemputės yra pavojingos atliekos. Jas reikia mesti į specialias dėžutes prekybos centruose." },
+      { "item": "Plastikinis butelis nuo gėrimo", "explanation": "Visi plastikiniai (PET) buteliai turi būti išmesti į plastiko ir pakuočių konteinerį. Geriausia – suspausti." },
+      { "item": "Perskaitytas laikraštis", "explanation": "Švari makulatūra – laikraščiai, žurnalai, kartoninės dėžutės – visada keliauja į popieriaus konteinerį." },
+      { "item": "Kavos tirščiai", "explanation": "Organinės kilmės atliekos, tokios kaip maisto likučiai, keliauja į buitinių atliekų konteinerį (arba kompostą, jei turite)." },
+      { "item": "Metalinė skardinė nuo konservų", "explanation": "Metalo pakuotės (skardinės, dangteliai) metamos į tą patį konteinerį kaip ir plastikas – geltonąjį." }
+    ]
+  },
+  "items": {
+    "maistas": {
+      "avienos_plovas": { "name": "Avienos plovas (patiekalas su aviena)", "reality": "Aviena yra vienas didžiausią CO2 pėdsaką turinčių mėsos produktų, kartais lenkiantis net jautieną. 1 kg avienos gali sugeneruoti virš 25 kg CO2e." },
+      "jautienos_didkepsnis": { "name": "Jautienos didkepsnis (arba mėsainis)", "reality": "Viena 200 g porcija jautienos „kainuoja“ apie 12-20 kg CO2e. Tai prilygsta maždaug 100 km kelionei automobiliu." },
+      "kiaulienos_karbonadas": { "name": "Kiaulienos karbonadas (patiekalas su kiauliena)", "reality": "Kiaulienos poveikis yra mažesnis nei jautienos, bet vis tiek ženklus. 1 kg kiaulienos „kainuoja“ apie 7-8 kg CO2e, daugiausia dėl pašarų auginimo ir mėšlo tvarkymo." },
+      "keturiu_suriu_pica": { "name": "Keturios sūrių pica (patiekalas su daug sūrio)", "reality": "Sūrio gamyba yra antras didžiausias maisto pramonės teršėjas po jautienos. 1 kg sūrio apie 10-20 kg CO2e." },
+      "cepelinai_su_mesa": { "name": "Cepelinai su mėsa ir spirgučių-grietinės padažu", "reality": "Nors bulvės yra tvarus produktas, mėsos įdaras ir ypač spirgučių bei grietinės padažas stipriai padidina patiekalo CO2 pėdsaką. Tai – pieno ir mėsos pramonės derinys." },
+      "vistienos_krutinele": { "name": "Vištienos krūtinėlė su ryžiais (patiekalas su vištiena)", "reality": "1 kg vištienos - apie 6 kg CO2e. Žymiai mažiau nei jautienos, bet vis tiek reikšmingai daugiau nei augalinio maisto." },
+      "kepta_lasisa": { "name": "Kepta lašišos filė (patiekalas su žuvimi iš fermos)", "reality": "Priklauso nuo žuvies, bet 1 kg lašišos iš fermos gamyba gali siekti apie 11 kg CO2e." },
+      "darzoviu_pica": { "name": "Daržovių pica su mažiau sūrio", "reality": "Sumažinus sūrio kiekį perpus ir pridėjus daugiau daržovių, picos CO2 pėdsakas gali sumažėti daugiau nei 40%. Sūris yra vienas taršiausių ingredientų." },
+      "bulviniai_blynai": { "name": "Bulviniai blynai su grietine", "reality": "Bulvės yra vienas tvariausių maisto produktų, tačiau grietinės gamyba reikalauja daug resursų ir sukuria emisijas. Pieno produktai yra reikšmingas šiltnamio efektą sukeliančių dujų šaltinis." },
+      "salotos_avokadu_bolivine": { "name": "Salotos su avokadu ir bolivine balanda (importuoti produktai)", "reality": "Nors poveikis mažesnis, tolimas transportavimas ir didelis vandens suvartojimas (pvz., 1 kg avokadų gali prireikti iki 2000 litrų vandens) palieka pėdsaką." },
+      "tofu_sojos_kepsneliai": { "name": "Tofu / sojos kepsneliai su daržovėmis", "reality": "Sojos produktai yra efektyvus baltymų šaltinis, kurio pėdsakas yra dešimtis kartų mažesnis nei mėsos. Poveikį šiek tiek padidina perdirbimo ir transportavimo procesai." },
+      "saltibarsciai": { "name": "Šaltibarščiai su bulvėmis", "reality": "Gana tvarus pasirinkimas! Didžiausią pėdsaką palieka kefyras (pieno produktas)." },
+      "grikiu_kose_burokeliu_sriuba": { "name": "Grikių košė ar burokėlių sriuba", "reality": "Vietiniai ir sezoniniai produktai, tokie kaip grikiai ar burokėliai, turi minimalų poveikį aplinkai. 1 kg lęšių - mažiau nei 1 kg CO2e." },
+      "lesiu_troskinys": { "name": "Sotus lęšių troškinys su sezoninėmis daržovėmis", "reality": "Puikus pasirinkimas! Ankštinės daržovės, tokios kaip lęšiai, ne tik turi mažą CO2 pėdsaką (mažiau nei 1 kg CO2e vienam kg produkto), bet ir praturtina dirvožemį azotu." },
+      "veganiski_saltibarsciai": { "name": "Veganiški šaltibarščiai (su augaliniu jogurtu)", "reality": "Pakeitus kefyrą augaline alternatyva, šaltibarščių pėdsakas tampa beveik nulinis. Tai puikus pavyzdys, kaip lengvai galima paversti tradicinį patiekalą tvaresniu." },
+      "veganiski_cepelinai": { "name": "Veganiški cepelinai su lęšių ir grybų įdaru", "reality": "Atsisakius mėsos ir grietinės, tradicinis patiekalas tampa draugišku planetai. Augaliniai įdarai drastiškai sumažina CO2 ir vandens sąnaudas." },
+      "grybu_sriuba": { "name": "Grybų sriuba (iš vietinių grybų)", "reality": "Vietiniai, laukiniai grybai yra tvarumo pavyzdys. Jų auginimui nereikia jokių papildomų išteklių, o poveikis gamtai yra minimalus. Tai vienas draugiškiausių patiekalų planetai." },
+      "salotos_su_avinzirniais": { "name": "Sočios salotos su skrudintais avinžirniais", "reality": "Sezoninės daržovės, ankštiniai produktai ir vietiniai ingredientai – tai tvarumo pagrindas. Šis patiekalas beveik nepalieka neigiamo pėdsako ir yra naudingas sveikatai." }
+    },
+    "gerimai": {
+      "energinis_gerimas": { "name": "Energinis gėrimas / gėrimas skardinėje", "reality": "Apie 0.3-0.5 kg CO2e. Didžiausią poveikį daro aliuminio skardinės gamyba, kuri yra itin imli energijai." },
+      "cappuccino_karves": { "name": "Cappuccino (su karvės pienu)", "reality": "Didžiąją dalį (virš 75%) šio gėrimo CO2 pėdsako sudaro karvės pienas. Pieno pramonė yra atsakinga už dideles metano emisijas ir reikalauja milžiniškų žemės bei vandens išteklių." },
+      "matcha_latte_karves": { "name": "Matcha latte (su karvės pienu)", "reality": "Nors pati matcha arbata yra labai tvari, karvės pieno naudojimas paverčia šį gėrimą vienu taršiausių. Pieno pėdsakas visiškai nustelbia arbatos privalumus." },
+      "kava_vienkartiniame": { "name": "Kava vienkartiniame puodelyje", "reality": "Pats popierinis puodelis su plastikiniu dangteliu turi apie 0.1 kg CO₂e pėdsaką. Per metus tai gali susidaryti į reikšmingą kiekį." },
+      "cappuccino_augalinis": { "name": "Cappuccino (su augaliniu pienu)", "reality": "Pasirinkus augalinį (pvz., avižų) pieną, gėrimo pėdsakas sumažėja apie 60-70%. Tai vienas lengviausių būdų mėgautis kava tvariau." },
+      "kava_namuose": { "name": "Kava (paruošta namuose, savo puodelyje)", "reality": "Didžiausias laimėjimas – išvengtas vienkartinis puodelis. Visgi pačios kavos pupelių auginimas, apdorojimas ir transportavimas iš tolimų šalių palieka nedidelį pėdsaką." },
+      "matcha_latte_augalinis": { "name": "Matcha latte (su augaliniu pienu)", "reality": "Tai itin tvarus pasirinkimas. Tiek matcha arbata, tiek augalinis pienas (ypač avižų) turi labai mažą poveikį aplinkai." },
+      "arbata": { "name": "Žalioji, juodoji ar vaisinė arbata", "reality": "Arbatos auginimas reikalauja mažiau išteklių nei kavos, todėl jos pėdsakas yra vienas mažiausių tarp karštųjų gėrimų. Pagrindinį poveikį sudaro vandens užvirinimas." },
+      "vanduo_is_ciaupo": { "name": "Vanduo iš čiaupo (į savo gertuvę ar puodelį)", "reality": "Realybė: Poveikis praktiškai nulinis. Gertuvės naudojimas padeda išvengti šimtų plastikinių butelių per metus." }
+    },
+    "transportas": {
+      "kelione_automobiliu": { "name": "Kelionė automobiliu (vienam/dviese)", "reality": "Vidutinis benzininis automobilis išmeta apie 170 g CO2/km. 40 km kelionė pirmyn ir atgal - apie 6.8 kg CO2e." },
+      "kelione_viesuoju": { "name": "Kelionė viešuoju transportu", "reality": "Poveikis išsidalina visiems keleiviams. Vienam žmogui tenkanti emisija 40 km kelionei yra apie 1.6 kg CO₂e." },
+      "kelione_dviraciu": { "name": "Kelionė dviračiu, paspirtuku ar pėsčiomis", "reality": "Poveikis aplinkai - praktiškai 0." }
+    },
+    "uzkandziai": {
+      "kibinas_su_aviena": { "name": "Kibinas su aviena", "reality": "Tradicinis kibinas su kapota aviena ar jautiena yra vienas taršiausių užkandžių. Avienos ir jautienos CO2 pėdsakas yra itin didelis, o sviestas tešloje prideda savo dalį. Dažnai pakuojamos į neperdirbamus popieriaus ir plastiko maišelius (su \"langeliu\") arba į bendrą plastikinį maišelį." },
+      "susiu_rinkinys": { "name": "Sušių rinkinys (su lašiša, tunu)", "reality": "Didžiausią pėdsaką palieka žuvis (ypač nykstantis tunas) ir jūros gėrybės. Taip pat prisideda importuoti ingredientai, pavyzdžiui, avokadai ir ryžiai, kurių auginimui išsiskiria daug metano. Rinkinys taip pat supakuotas į neperdirbamą vienkartinio plastiko padėklą su dangteliu." },
+      "pringles": { "name": "„Pringles\" traškučių tūtelė", "reality": "Realybė: ~0.7 kg CO₂e. Šis produktas yra „ekologinis košmaras“ dėl pakuotės. Tūtelė pagaminta iš kelių medžiagų (kartono, metalo, plastikinio dangtelio), todėl jos praktiškai neįmanoma perdirbti." },
+      "bandele_su_desrele": { "name": "Bandelė su dešrele", "reality": "Didžiausią poveikį daro perdirbta mėsa (dažniausiai kiauliena), kurios gamyba reikalauja daug išteklių. Tai kur kas taršiau nei augalinės kilmės užkandis. Prisideda ir pakuotė: prekybos centruose bandelės dažnai pakuojamos į neperdirbamus popieriaus ir plastiko maišelius (su \"langeliu\") arba į bendrą plastikinį maišelį." },
+      "traskuciu_pakelis": { "name": "„Estrella\" ar „Oho!\" traškučių pakelis", "reality": "Realybė: ~0.4-0.6 kg CO₂e. Nors pačių traškučių pėdsakas panašus, pakuotė yra šiek tiek mažesnis blogis nei „Pringles“, tačiau vis tiek pagaminta iš daugiasluoksnio, sunkiai perdirbamo plastiko ir aliuminio folijos." },
+      "sakotis": { "name": "Šakotis (gabalėlis)", "reality": "Šio deserto pėdsaką išpučia didžiulis kiekis gyvūninės kilmės produktų: kiaušinių, sviesto ir grietinės. Vieno kilogramo gamybai gali prireikti net 50 kiaušinių." },
+      "magija_surelis": { "name": "„Magija\" glaistytas sūrelis", "reality": "Realybė: ~0.3-0.5 kg CO₂e. Pieno produktų gamyba (varškė, sviestas) yra imli resursams. Taip pat prisideda neperdirbama daugiasluoksnė pakuotė." },
+      "sokoladukas_karuna": { "name": "Šokoladukas „Karūna\"", "reality": "Realybė: Poveikis labai priklauso nuo ingredientų. Pieno milteliai, palmių aliejus (dažnai susijęs su miškų kirtimu) ir netvariai auginama kakava sudaro didžiąją dalį pėdsako. Tačiau pakuotė taip pat neperdirbama – tai daugiasluoksnis plastiko ir folijos derinys." },
+      "tinginys": { "name": "Tinginys (gabalėlis)", "reality": "Desertas, kurio pagrindą sudaro sausainiai, kakava ir du pieno pramonės produktai – sviestas ir kondensuotas pienas. Būtent jie labiausiai prisideda prie neigiamo poveikio." },
+      "obuolys_morka": { "name": "Lietuviškas obuolys ar morka (be pakuotės)", "reality": "Realybė: Poveikis artimas nuliui. Vietinis, sezoninis produktas be jokios pakuotės. Pats tvariausias pasirinkimas." },
+      "coca_cola_skardine": { "name": "„Coca-Cola\" gėrimas (0.33 l skardinėje)", "reality": "Realybė: ~0.3-0.5 kg CO₂e. Aliuminio gamyba yra itin imli energijai, todėl skardinė palieka didesnį pėdsaką nei plastikinis butelis." },
+      "coca_cola_butelis": { "name": "„Coca-Cola\" gėrimas (0.5 l plastikiniame butelyje)", "reality": "Realybė: ~0.2-0.3 kg CO₂e. Plastikinis (PET) butelis gaminamas iš naftos. Prie pėdsako prisideda ne tik butelio gamyba, bet ir cukraus gamyba, transportavimas." },
+      "neptuno_vanduo": { "name": "„Neptūno\" vanduo (0.5 l plastikiniame butelyje)", "reality": "Realybė: ~0.15 kg CO₂e. Visą žalą daro plastikinė pakuotė ir transportavimas, ypač kai Lietuvoje turime aukštos kokybės vandenį iš čiaupo." },
+      "smetoniska_gira": { "name": "„Smetoniška\" gira (1 l plastikiniame butelyje)", "reality": "Realybė: ~0.3 kg CO₂e (už visą butelį). Gira dažnai yra lokalesnis produktas, reikalaujantis mažiau sudėtingų, importuojamų ingredientų ir trumpesnio transportavimo kelio." }
+    },
+    "pirkiniai": {
+      "skrydis_lektuvu": { "name": "Skrydis lėktuvu savaitgalio išvykai", "reality": "Toks skrydis į abi puses vienam asmeniui išmeta apie 250-300 kg CO2e. Tai daugiau, nei tvarus metinis CO2 biudžetas leidžia transportui." },
+      "naujas_telefonas": { "name": "Naujas išmanusis telefonas", "reality": "Apie 80% telefono CO2 pėdsako atsiranda gamybos metu. Tai sudaro apie 60-90 kg CO2e, neįskaitant retųjų metalų kasybos poveikio." },
+      "greitosios_mados_drabuzis": { "name": "Naujas greitosios mados drabužis (pvz., džinsai)", "reality": "Viena pora džinsų – apie 33 kg CO2e ir ~3,700 litrų vandens. Tai prilygsta 111 km kelionei automobiliu ir 3 metų geriamojo vandens kiekiui vienam žmogui." },
+      "humana_drabuzis": { "name": "Drabužis ar daiktas iš Humanos", "reality": "Poveikis artimas nuliui, nesukuriama nauja paklausa gamybai. Pėdsaką sudaro tik transportavimas iki parduotuvės." },
+      "apsilankymas_kine": { "name": "Apsilankymas kine", "reality": "Poveikis nedidelis, daugiausia susijęs su pastato energijos vartojimu." },
+      "pasivaiksciojimas_parke": { "name": "Pasivaikščiojimas parke / žygis miške", "reality": "Skatina ryšį su gamta, jos vertinimą ir išsaugojimą." },
+      "skaitmenine_knyga": { "name": "Skaitmeninės knygos skaitymas (e. knyga)", "reality": "Pats skaitymo ir atsisiuntimo procesas yra labai taupus (~20-50 g CO₂e). Palyginimui, naujos popierinės knygos pėdsakas - apie 1-3 kg CO2e. Tačiau didysis „bet\" yra skaitymo įrenginio (skaityklės, planšetės) gamyba, kuri siekia ~30-50 kg CO2e. Vadinasi, kad skaityklė atsipirktų ekologiškai, ja reikia perskaityti dešimtis knygų, kurias antraip būtumėte pirkę popierines. Pats tvariausias pasirinkimas - skaityti knygas iš bibliotekos!" },
+      "nauja_knyga_popierine": { "name": "Nauja knyga (popierinė)", "reality": "Vidutinė knyga palieka apie 1-3 kg CO₂e pėdsaką dėl popieriaus gamybos, spausdinimo ir transportavimo." }
+    },
+    "skaitmeninis": {
+      "video_zaidimai": { "name": "Video žaidimai galingu kompiuteriu (už dieną)", "reality": "Galingas žaidimų kompiuteris gali vartoti tiek pat energijos, kiek keli šaldytuvai. Kelios valandos žaidimo - apie 0.5-1 kg CO₂e." },
+      "chatgpt_naudojimas": { "name": "Dirbtinio intelekto (ChatGPT) aktyvus naudojimas (už dieną)", "reality": "Nors viena užklausa palieka mažą pėdsaką, intensyvus naudojimas per valandą gali sugeneruoti apie 0.5-7.5 g CO2e dėl duomenų centrų energijos." },
+      "socialiniai_tinklai": { "name": "Naršymas socialiniuose tinkluose (1-2 val. per dieną)", "reality": "Valanda naršymo sugeneruoja apie 60-120 g CO2e. „Debesis“ (cloud) iš tiesų yra didžiuliai, fiziškai egzistuojantys ir daug energijos reikalaujantys pastatai." },
+      "telefono_ikrovimas": { "name": "Išmaniojo telefono įkrovimas (už visą savaitę)", "reality": "Pats įkrovimas yra menkas (5-10 g CO₂e), bet tai priminimas apie didžiausią telefono poveikį - gamybą (60-90 kg CO₂е)." },
+      "skalbimas_dziovinimas": { "name": "Skalbimas ir džiovinimas el. džiovyklėje (už 1 ciklą)", "reality": "Džiovyklė yra vienas daugiausiai energijos vartojančių prietaisų. Vienas ciklas - apie 1-2 kg CO2e." }
+    },
+    "pozityvus": {
+      "savaite_be_plastiko": { "name": "Savaitę nepirkti nieko, kas supakuota į vienkartinį plastiką", "reality": "Mažinate plastiko taršą ir iškastinio kuro vartojimą, nes plastikas gaminamas iš naftos." },
+      "kruopstus_rusiavimas": { "name": "Kruopštus rūšiavimas visą savaitę", "reality": "Perdirbimas taupo energiją ir gamtos išteklius. Pvz., pagaminti skardinę iš perdirbto aliuminio reikia 95% mažiau energijos." }
+    }
+  }
+}

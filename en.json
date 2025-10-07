@@ -1,0 +1,184 @@
+{
+  "general": {
+    "points_suffix": "pts.",
+    "close": "Close",
+    "confirm": "Confirm"
+  },
+  "screens": {
+    "start": {
+      "title": "Sustainability Auction 🌍",
+      "subtitle": "Plan your week without exceeding the 100 eco-point budget. Good luck!",
+      "startButton": "Start Game",
+      "rulesButton": "How to Play?"
+    },
+    "game": {
+      "scoreLabel": "Balance:",
+      "finishButton": "Finish Planning",
+      "sidebarHint": "Hold and drag an action into the plan! There is no limit to the number of actions in a slot.",
+      "planSlotEmpty": "Click the title, then drag an action here",
+      "invalidActionTooltip": "This action was voided due to a conflicting choice."
+    },
+    "end": {
+      "defaultTitle": "Result",
+      "title": "Weekly Results",
+      "restartButton": "Play Again",
+      "successMessage": "Congratulations! 🥳 You've successfully planned your week! Your balance: <span style='color: var(--primary-color); font-weight: bold;'>{score} pts.</span>",
+      "failMessage": "Not this time... You exceeded the budget by {overBudget} points. Your balance: <span style='color: var(--danger-color); font-weight: bold;'>{score} pts.</span>",
+      "summaryTitle": "Weekly Impact Summary",
+      "summaryCO2": "Your total CO₂ footprint this week: <strong>{totalCo2e} kg</strong>.",
+      "summaryCar": "This is equivalent to a car trip of: <strong>{carKmEquivalent} km</strong>.",
+      "summaryWater": "You saved: <strong>{Math.round(totalWaterSaved)} liters of water</strong>.",
+      "summaryBestChoice": "Your most sustainable choice: <strong>\"{mostSustainableChoiceName}\" (+{mostSustainableChoicePoints} pts.)</strong>.",
+      "chartLabel": "CO₂ Footprint (kg)",
+      "chartTitle": "Weekly CO₂ Footprint Overview",
+      "chartYAxisLabel": "CO₂e (kg)"
+    }
+  },
+  "modals": {
+    "defaultTitle": "Select an Action",
+    "noInfoAvailable": "Additional information is not available.",
+    "rules": {
+      "title": "Game Rules",
+      "content": "The goal is simple – plan a week and end with a positive eco-point balance.\n\n• You start with a <strong>100 eco-point</strong> budget.\n• Each choice you make will either add points (sustainable actions) or subtract them (polluting actions).\n\nThe winner is whoever creates a sustainable and fun weekly plan without depleting the entire budget. Good luck!"
+    }
+  },
+  "alerts": {
+    "planIncomplete": "Planning to starve?",
+    "cannotAddToSlot": "Cannot add \"{itemName}\" to the \"{slotTitle}\" slot.",
+    "plasticChallengeFailed": "ATTENTION! Your choice of \"{itemName}\" has broken your commitment to not buy items in plastic packaging. You have lost {points} points.",
+    "sortingGameEnded": "Game over! Correct answers: {sortingScore}/{questionsToAsk}. POINTS EARNED: {finalPoints}."
+  },
+  "time": {
+    "weekdaysShort": ["M", "T", "W", "T", "F", "S", "S"],
+    "weekdaysLong": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+  },
+  "planSlots": {
+    "breakfast": "Breakfast",
+    "lunch": "Lunch",
+    "dinner": "Dinner",
+    "transport": "Transportation",
+    "snacks": "Snacks & Drinks",
+    "shopping": "Shopping & Entertainment",
+    "digital": "Digital World & Home",
+    "positive": "Positive Actions"
+  },
+  "wednesdayEvent": {
+    "title": "Wednesday's Mishap!",
+    "prompt": "Your smartphone fell into the toilet before you had a chance to flush what was floating in it (you ate a kebab yesterday that really disagreed with your stomach). What do you do?",
+    "choice1_text": "Buy a new smartphone",
+    "choice1_reality": "Reality: ~60-90 kg CO₂e. About 80% of a phone's footprint comes from manufacturing due to rare earth mining, energy-intensive processes, and transportation. Every new phone is a huge burden on the planet.",
+    "choice2_text": "Buy a used smartphone",
+    "choice2_reality": "Reality: Impact is near zero. You don't initiate new production but extend the life cycle of an existing product. The footprint only consists of transportation. It's one of the most effective ways to reduce e-waste and resource consumption.",
+    "choice3_text": "Quickly try to save the phone",
+    "choice3_reality": "Reality: You 'save' all the emissions and resources that would have been used to manufacture a new device.",
+    "penalty_item_name": "Turning an old phone into e-waste",
+    "penalty_item_reality": "Throwing a phone into the general waste bin turns it into hazardous waste. Improperly managed electronics release toxic metals (lead, mercury) into the environment, harming ecosystems and human health.",
+    "defaultChoice_name": "Living without a smartphone",
+    "defaultChoice_reality": "You completely avoid the biggest impact of personal electronics – manufacturing. This is equivalent to eliminating a (-75 pts) footprint every few years. You also drastically reduce your digital footprint and energy consumption. In reality, in 2025, this is a huge challenge: you lose access to mobile banking, maps, instant messaging apps, and services like Bolt or CityBee."
+  },
+  "sortingGame": {
+    "title": "Sorting Challenge!",
+    "progress": "Question {currentSortingQuestionIndex} of {questionsToAsk}",
+    "question": "Where to throw: \"{item}\"?",
+    "feedbackCorrect": "Correct! ✅",
+    "feedbackIncorrect": "Incorrect... ❌",
+    "nextButton": "Next Question →",
+    "bins": {
+      "plastikas": "Plastic & Packaging",
+      "popierius": "Paper",
+      "stiklas": "Glass",
+      "buitines": "General Waste",
+      "pavojingos": "Hazardous Waste"
+    },
+    "resultText": {
+      "perfect": "flawlessly",
+      "good": "with a few mistakes",
+      "bad": "needs practice"
+    },
+    "finalItemName": "Sorting ({sortingScore}/{questionsToAsk} correct, {resultText})",
+    "questions": [
+      { "item": "Greasy pizza box", "explanation": "Paper and cardboard stained with grease or food scraps are not recyclable and go into the general waste container." },
+      { "item": "Pickle jar", "explanation": "A clean glass jar without a lid always goes into the glass container. The lid (if metal) goes into plastics." },
+      { "item": "Used battery", "explanation": "Batteries, accumulators, and light bulbs are hazardous waste. They must be disposed of in special boxes at supermarkets." },
+      { "item": "Plastic drink bottle", "explanation": "All plastic (PET) bottles should be thrown into the plastic and packaging container. It's best to crush them first." },
+      { "item": "Read newspaper", "explanation": "Clean paper products – newspapers, magazines, cardboard boxes – always go into the paper container." },
+      { "item": "Coffee grounds", "explanation": "Organic waste, such as food scraps, goes into the general waste container (or a compost bin, if you have one)." },
+      { "item": "Metal food can", "explanation": "Metal packaging (cans, lids) is thrown into the same container as plastic – the yellow one." }
+    ]
+  },
+  "items": {
+    "maistas": {
+      "avienos_plovas": { "name": "Lamb pilaf (dish with lamb)", "reality": "Lamb is one of the meat products with the largest CO2 footprint, sometimes even surpassing beef. 1 kg of lamb can generate over 25 kg of CO2e." },
+      "jautienos_didkepsnis": { "name": "Beef steak (or burger)", "reality": "A single 200g serving of beef 'costs' about 12-20 kg of CO2e. This is equivalent to driving a car for about 100 km." },
+      "kiaulienos_karbonadas": { "name": "Pork chop (dish with pork)", "reality": "The impact of pork is less than beef but still significant. 1 kg of pork 'costs' about 7-8 kg of CO2e, mainly due to feed cultivation and manure management." },
+      "keturiu_suriu_pica": { "name": "Four-cheese pizza (dish with a lot of cheese)", "reality": "Cheese production is the second-largest polluter in the food industry after beef. 1 kg of cheese generates about 10-20 kg of CO2e." },
+      "cepelinai_su_mesa": { "name": "Cepelinai with meat and bacon-sour cream sauce", "reality": "Although potatoes are a sustainable product, the meat filling and especially the bacon and sour cream sauce significantly increase the dish's CO2 footprint. It's a combination of the dairy and meat industries." },
+      "vistienos_krutinele": { "name": "Chicken breast with rice (dish with chicken)", "reality": "1 kg of chicken is about 6 kg of CO2e. Significantly less than beef, but still considerably more than plant-based food." },
+      "kepta_lasisa": { "name": "Baked salmon fillet (farmed fish dish)", "reality": "It depends on the fish, but producing 1 kg of farmed salmon can generate about 11 kg of CO2e." },
+      "darzoviu_pica": { "name": "Vegetable pizza with less cheese", "reality": "By halving the amount of cheese and adding more vegetables, a pizza's CO2 footprint can be reduced by more than 40%. Cheese is one of the most polluting ingredients." },
+      "bulviniai_blynai": { "name": "Potato pancakes with sour cream", "reality": "Potatoes are one of the most sustainable food products, but sour cream production requires many resources and creates emissions. Dairy products are a significant source of greenhouse gases." },
+      "salotos_avokadu_bolivine": { "name": "Salad with avocado and quinoa (imported products)", "reality": "Although the impact is smaller, long-distance transportation and high water consumption (e.g., 1 kg of avocados can require up to 2000 liters of water) leave a footprint." },
+      "tofu_sojos_kepsneliai": { "name": "Tofu / soy patties with vegetables", "reality": "Soy products are an efficient protein source with a footprint tens of times smaller than meat. The impact is slightly increased by processing and transportation." },
+      "saltibarsciai": { "name": "Cold beet soup (Šaltibarščiai) with potatoes", "reality": "A fairly sustainable choice! The biggest footprint comes from kefir (a dairy product)." },
+      "grikiu_kose_burokeliu_sriuba": { "name": "Buckwheat porridge or beet soup", "reality": "Local and seasonal products like buckwheat or beets have a minimal environmental impact. 1 kg of lentils is less than 1 kg of CO2e." },
+      "lesiu_troskinys": { "name": "Hearty lentil stew with seasonal vegetables", "reality": "An excellent choice! Legumes like lentils not only have a low CO2 footprint (less than 1 kg of CO2e per kg of product) but also enrich the soil with nitrogen." },
+      "veganiski_saltibarsciai": { "name": "Vegan cold beet soup (with plant-based yogurt)", "reality": "By replacing kefir with a plant-based alternative, the soup's footprint becomes almost zero. A great example of how easily a traditional dish can be made more sustainable." },
+      "veganiski_cepelinai": { "name": "Vegan cepelinai with lentil and mushroom filling", "reality": "By omitting meat and sour cream, this traditional dish becomes planet-friendly. Plant-based fillings drastically reduce CO2 and water consumption." },
+      "grybu_sriuba": { "name": "Mushroom soup (from local mushrooms)", "reality": "Local, wild mushrooms are a model of sustainability. Their cultivation requires no additional resources, and their impact on nature is minimal. It's one of the most planet-friendly dishes." },
+      "salotos_su_avinzirniais": { "name": "Hearty salad with roasted chickpeas", "reality": "Seasonal vegetables, legumes, and local ingredients are the foundation of sustainability. This dish leaves almost no negative footprint and is healthy." }
+    },
+    "gerimai": {
+      "energinis_gerimas": { "name": "Energy drink / canned beverage", "reality": "About 0.3-0.5 kg of CO2e. The biggest impact comes from the production of the aluminum can, which is extremely energy-intensive." },
+      "cappuccino_karves": { "name": "Cappuccino (with cow's milk)", "reality": "The vast majority (over 75%) of this drink's CO2 footprint comes from cow's milk. The dairy industry is responsible for large methane emissions and requires enormous land and water resources." },
+      "matcha_latte_karves": { "name": "Matcha latte (with cow's milk)", "reality": "Although matcha tea itself is very sustainable, the use of cow's milk makes this drink one of the most polluting. The footprint of the milk completely overshadows the benefits of the tea." },
+      "kava_vienkartiniame": { "name": "Coffee in a disposable cup", "reality": "The paper cup with a plastic lid itself has a footprint of about 0.1 kg of CO₂e. Over a year, this can add up to a significant amount." },
+      "cappuccino_augalinis": { "name": "Cappuccino (with plant-based milk)", "reality": "Choosing plant-based milk (e.g., oat) reduces the drink's footprint by about 60-70%. It's one of the easiest ways to enjoy coffee more sustainably." },
+      "kava_namuose": { "name": "Coffee (made at home, in your own mug)", "reality": "The biggest win is avoiding the disposable cup. However, the cultivation, processing, and transportation of coffee beans from distant countries still leave a small footprint." },
+      "matcha_latte_augalinis": { "name": "Matcha latte (with plant-based milk)", "reality": "This is a very sustainable choice. Both matcha tea and plant-based milk (especially oat) have a very low environmental impact." },
+      "arbata": { "name": "Green, black, or fruit tea", "reality": "Tea cultivation requires fewer resources than coffee, so its footprint is one of the smallest among hot beverages. The main impact comes from boiling the water." },
+      "vanduo_is_ciaupo": { "name": "Tap water (in your own bottle or cup)", "reality": "Reality: The impact is practically zero. Using a reusable bottle helps avoid hundreds of plastic bottles per year." }
+    },
+    "transportas": {
+      "kelione_automobiliu": { "name": "Car trip (alone/with one passenger)", "reality": "An average gasoline car emits about 170 g of CO2/km. A 40 km round trip results in about 6.8 kg of CO2e." },
+      "kelione_viesuoju": { "name": "Trip by public transport", "reality": "The impact is shared among all passengers. The emission per person for a 40 km trip is about 1.6 kg of CO₂e." },
+      "kelione_dviraciu": { "name": "Trip by bike, scooter, or on foot", "reality": "Environmental impact is practically zero." }
+    },
+    "uzkandziai": {
+      "kibinas_su_aviena": { "name": "Kibinas with lamb from Maxima ", "reality": "A traditional kibinas with minced lamb or beef is one of the most polluting snacks. The CO2 footprint of lamb and beef is extremely high, and the butter in the dough adds its share. They are often packaged in non-recyclable paper-plastic bags." },
+      "susiu_rinkinys": { "name": "Sushi set (with salmon, tuna) from Maxima", "reality": "The biggest footprint comes from the fish (especially endangered tuna) and seafood. Imported ingredients like avocados and rice, which release a lot of methane during cultivation, also contribute. The set is also packaged in a non-recyclable single-use plastic tray with a lid." },
+      "pringles": { "name": "'Pringles' can", "reality": "Reality: ~0.7 kg of CO₂e. This product is an 'ecological nightmare' because of its packaging. The tube is made of multiple materials (cardboard, metal, plastic lid), making it practically impossible to recycle." },
+      "bandele_su_desrele": { "name": "Hot dog bun from Maxima", "reality": "The biggest impact comes from processed meat (usually pork), which is resource-intensive to produce. It's far more polluting than a plant-based snack. The packaging also contributes: in supermarkets, buns are often packaged in non-recyclable paper-plastic bags." },
+      "traskuciu_pakelis": { "name": "'Estrella' or 'Oho!' chip bag", "reality": "Reality: ~0.4-0.6 kg of CO₂e. Although the chips' footprint is similar, the packaging is a slightly lesser evil than 'Pringles', but it's still made of multi-layered, hard-to-recycle plastic and aluminum foil." },
+      "sakotis": { "name": "Šakotis (a piece of tree cake)", "reality": "This dessert's footprint is inflated by a huge amount of animal products: eggs, butter, and sour cream. Making one kilogram can require up to 50 eggs." },
+      "magija_surelis": { "name": "'Magija' curd snack", "reality": "Reality: ~0.3-0.5 kg of CO₂e. Dairy production (curd, butter) is resource-intensive. The non-recyclable multi-layered packaging also contributes." },
+      "sokoladukas_karuna": { "name": "'Karūna' chocolate bar", "reality": "Reality: The impact heavily depends on the ingredients. Milk powder, palm oil (often linked to deforestation), and unsustainably grown cocoa make up most of the footprint. The packaging is also non-recyclable—a multi-layered combination of plastic and foil." },
+      "tinginys": { "name": "Tinginys (a piece of 'lazy cake')", "reality": "A dessert based on cookies, cocoa, and two dairy products – butter and condensed milk. They are the main contributors to the negative impact." },
+      "obuolys_morka": { "name": "Local apple or carrot (unpackaged)", "reality": "Reality: Impact is close to zero. A local, seasonal product without any packaging. The most sustainable choice." },
+      "coca_cola_skardine": { "name": "'Coca-Cola' drink (0.33l can)", "reality": "Reality: ~0.3-0.5 kg of CO₂e. Aluminum production is extremely energy-intensive, so a can leaves a larger footprint than a plastic bottle." },
+      "coca_cola_butelis": { "name": "'Coca-Cola' drink (0.5l plastic bottle)", "reality": "Reality: ~0.2-0.3 kg of CO₂e. A plastic (PET) bottle is made from petroleum. Not only the bottle production but also sugar production and transportation contribute to the footprint." },
+      "neptuno_vanduo": { "name": "'Neptūnas' water (0.5l plastic bottle)", "reality": "Reality: ~0.15 kg of CO₂e. All the damage is done by the plastic packaging and transportation, especially when we have high-quality tap water available in Lithuania." },
+      "smetoniska_gira": { "name": "'Smetoniška' kvass (1l plastic bottle)", "reality": "Reality: ~0.3 kg of CO₂e (for the whole bottle). Kvass is often a more local product, requiring fewer complex, imported ingredients and shorter transportation distances." }
+    },
+    "pirkiniai": {
+      "skrydis_lektuvu": { "name": "Flight for a weekend trip", "reality": "A round-trip flight for one person emits about 250-300 kg of CO2e. This is more than a sustainable annual CO2 budget for transportation allows." },
+      "naujas_telefonas": { "name": "New smartphone", "reality": "About 80% of a phone's CO2 footprint is generated during production. This amounts to about 60-90 kg of CO2e, not including the impact of mining rare metals." },
+      "greitosios_mados_drabuzis": { "name": "New fast-fashion item (e.g., jeans)", "reality": "One pair of jeans accounts for about 33 kg of CO2e and ~3,700 liters of water. This is equivalent to driving a car for 111 km and one person's drinking water for 3 years." },
+      "humana_drabuzis": { "name": "Item from a thrift store", "reality": "Impact is close to zero as no new demand for production is created. The footprint only consists of transportation to the store." },
+      "apsilankymas_kine": { "name": "Going to the cinema", "reality": "The impact is small, mostly related to the building's energy consumption." },
+      "pasivaiksciojimas_parke": { "name": "A walk in the park / a hike in the forest", "reality": "Promotes a connection with nature, its appreciation, and preservation." },
+      "skaitmenine_knyga": { "name": "Reading a digital book (e-book)", "reality": "The reading and downloading process itself is very efficient (~20-50g of CO₂e). For comparison, a new paper book has a footprint of about 1-3 kg of CO2e. However, the big 'but' is the production of the reading device (e-reader, tablet), which is about ~30-50 kg of CO2e. This means for an e-reader to be ecologically worthwhile, you need to read dozens of books on it that you would have otherwise bought in paper form. The most sustainable option is to borrow books from the library!" },
+      "nauja_knyga_popierine": { "name": "New book (paper)", "reality": "An average book leaves a footprint of about 1-3 kg of CO₂e due to paper production, printing, and transportation." }
+    },
+    "skaitmeninis": {
+      "video_zaidimai": { "name": "Gaming on a powerful PC (per day)", "reality": "A powerful gaming computer can consume as much energy as several refrigerators. A few hours of gaming result in about 0.5-1 kg of CO₂e." },
+      "chatgpt_naudojimas": { "name": "Active use of AI (ChatGPT) (per day)", "reality": "Although a single query has a small footprint, intensive use over an hour can generate about 0.5-7.5 g of CO2e due to data center energy consumption." },
+      "socialiniai_tinklai": { "name": "Browsing social media (1-2 hours per day)", "reality": "An hour of browsing generates about 60-120 g of CO2e. The 'cloud' is actually huge, physical buildings that require a lot of energy." },
+      "telefono_ikrovimas": { "name": "Charging a smartphone (for the whole week)", "reality": "The charging itself is minor (5-10 g of CO₂e), but it's a reminder of the phone's biggest impact – its production (60-90 kg of CO₂e)." },
+      "skalbimas_dziovinimas": { "name": "Washing and drying in an electric dryer (per cycle)", "reality": "A dryer is one of the most energy-consuming appliances. One cycle is about 1-2 kg of CO2e." }
+    },
+    "pozityvus": {
+      "savaite_be_plastiko": { "name": "Not buying anything in single-use plastic for a week", "reality": "You reduce plastic pollution and fossil fuel consumption, as plastic is made from oil." },
+      "kruopstus_rusiavimas": { "name": "Diligent sorting all week", "reality": "Recycling saves energy and natural resources. For example, making a can from recycled aluminum requires 95% less energy." }
+    }
+  }
+}
