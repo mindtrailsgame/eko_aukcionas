@@ -27,8 +27,7 @@
       "summaryTitle": "Savaitės poveikio suvestinė",
       "summaryCO2": "Jūsų bendras CO₂ pėdsakas šią savaitę: <strong>{totalCo2e} kg</strong>.",
       "summaryCar": "Tai prilygsta kelionei automobiliu: <strong>{carKmEquivalent} km</strong>.",
-      "summaryWater": "Sutaupėte: <strong>{Math.round(totalWaterSaved)} litrų vandens</strong>.",
-      "summaryBestChoice": "Jūsų tvariausias pasirinkimas: <strong>\"{mostSustainableChoiceName}\" (+{mostSustainableChoicePoints} tšk.)</strong>.",
+    "summaryWater": "Sutaupėte: <strong>{totalWaterSaved}</strong> litrų vandens.",      "summaryBestChoice": "Jūsų tvariausias pasirinkimas: <strong>\"{mostSustainableChoiceName}\" (+{mostSustainableChoicePoints} tšk.)</strong>.",
       "chartLabel": "CO₂ Pėdsakas (kg)",
       "chartTitle": "Savaitės CO₂ pėdsako apžvalga",
       "chartYAxisLabel": "CO₂e (kg)"
