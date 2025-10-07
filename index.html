@@ -826,7 +826,6 @@
             const slotDiv = document.createElement('div');
             slotDiv.className = 'plan-slot';
             slotDiv.dataset.dayIndex = dayIndex;
-            // Saugome permanentinį raktą, o ne išverstą pavadinimą
             slotDiv.dataset.slotKey = slotKey;
 
             const titleH3 = document.createElement('h3');
@@ -844,7 +843,6 @@
             });
 
             if (itemsInSlot && itemsInSlot.length > 0) {
-                // ... (ši dalis lieka nepakitusi) ...
                 const list = document.createElement('ul');
                 list.className = 'general-actions-list';
 
@@ -855,7 +853,21 @@
                         li.style.color = '#aaa';
                         li.title = t('screens.game.invalidActionTooltip');
                     }
-                    const itemName = t(item.nameKey);
+
+                    // --> Pakeitimas čia: tikriname, ar tai specialus rūšiavimo rezultatas <--
+                    let itemName;
+                    if (item.type === 'sortingResult') {
+                        // Jei taip, sukonstruojame pavadinimą iš duomenų
+                        itemName = t('sortingGame.finalItemName', {
+                            sortingScore: item.data.score,
+                            questionsToAsk: item.data.total,
+                            resultText: t(item.data.resultKey)
+                        });
+                    } else {
+                        // Kitu atveju, naudojame standartinę logiką
+                        itemName = t(item.nameKey);
+                    }
+                    
                     const itemReality = t(item.realityKey) || t('modals.noInfoAvailable');
 
                     const textNode = document.createElement('span');
@@ -864,7 +876,7 @@
                     const infoIcon = document.createElement('span');
                     infoIcon.className = 'item-info-icon'; infoIcon.textContent = 'ⓘ';
                     
-                    if (item.nameKey === highlightItemNameKey) {
+                    if (item.nameKey === highlightItemNameKey) { // This highlight might not work for sorting result, but it's a minor issue
                         infoIcon.classList.add('info-icon-glow');
                         setTimeout(() => infoIcon.classList.remove('info-icon-glow'), 3000);
                     }
@@ -900,13 +912,11 @@
                         return;
                     }
 
-                    // --> Pakeitimas čia: perduodame slotKey į mini žaidimą <--
                     if (droppedItem.nameKey === 'items.pozityvus.kruopstus_rusiavimas.name') {
                         startSortingMinigame(droppedItem, dayIndex, slotKey);
                         closeSidebar(); return;
                     }
                     
-                    // --> Pakeitimas čia: įrašome į planą naudodami permanentinį raktą <--
                     if (!weeklyPlan[dayIndex][slotKey]) weeklyPlan[dayIndex][slotKey] = [];
                     weeklyPlan[dayIndex][slotKey].push(droppedItem);
                     
@@ -921,7 +931,7 @@
                     if (isPlasticFreeWeekChosen && isItemInPlastic) {
                         let challengeItem = null;
                         for (const day of weeklyPlan) {
-                            for (const key in day) { // Iteruojame per raktus
+                            for (const key in day) {
                                 const found = day[key].find(it => it.nameKey === plasticFreeChallengeKey && !it.invalidated);
                                 if (found) { challengeItem = found; break; }
                             }
@@ -1128,26 +1138,49 @@
         }
 
         // --> Funkcijos parašas pasikeitė: priima slotKey <--
+        // --- PRADŽIA: Funkcijos rūšiavimo mini žaidimui ---
+        
         function startSortingMinigame(item, dayIdx, slotKey) {
             sortingGameActive = true;
             originalSortingAction = item;
             sortingDayIndex = dayIdx;
-            // --> Pakeitimas čia <--
             sortingSlotKey = slotKey;
 
             currentSortingQuestionIndex = 0;
             sortingScore = 0;
             
-            const gameQuestions = translations.sortingGame.questions.map(q => ({
-                item: q.item,
-                explanation: q.explanation,
-                correctBin: ['buitines', 'stiklas', 'pavojingos', 'plastikas', 'popierius', 'buitines', 'plastikas'][translations.sortingGame.questions.indexOf(q)]
-            }));
+            // Dabar tiesiog nukopijuojame klausimus, nebereikia sudėtingo map'inimo
+            const gameQuestions = [...translations.sortingGame.questions];
 
-            shuffledQuestions = [...gameQuestions].sort(() => 0.5 - Math.random()).slice(0, QUESTIONS_TO_ASK);
+            shuffledQuestions = gameQuestions.sort(() => 0.5 - Math.random()).slice(0, QUESTIONS_TO_ASK);
 
             dom.sortingModal.classList.add('active');
             displayNextSortingQuestion();
+        }
+
+        function displayNextSortingQuestion() {
+            dom.sortingFeedback.textContent = '';
+            dom.sortingExplanation.style.display = 'none';
+
+            if (currentSortingQuestionIndex >= shuffledQuestions.length) {
+                endSortingMinigame();
+                return;
+            }
+
+            const question = shuffledQuestions[currentSortingQuestionIndex];
+            dom.sortingProgress.textContent = t('sortingGame.progress', {currentSortingQuestionIndex: currentSortingQuestionIndex + 1, questionsToAsk: QUESTIONS_TO_ASK});
+            dom.sortingQuestion.textContent = t('sortingGame.question', {item: question.item});
+            
+            dom.sortingBins.innerHTML = '';
+            const bins = t('sortingGame.bins');
+
+            for (const binKey in bins) {
+                const button = document.createElement('button');
+                button.textContent = bins[binKey];
+                button.className = `bin-btn ${binKey}`;
+                button.onclick = () => checkSortingAnswer(binKey, question.correctBin, question.explanation);
+                dom.sortingBins.appendChild(button);
+            }
         }
 
         function checkSortingAnswer(chosenBin, correctBin, explanation) {
@@ -1177,32 +1210,41 @@
 
         function endSortingMinigame() {
             sortingGameActive = false;
-            let finalPoints = 0; let resultText = '';
+            let finalPoints = 0;
+            let resultKey = ''; // Vietoj teksto, saugosime rakto pavadinimą
 
             if (sortingScore === QUESTIONS_TO_ASK) {
                 finalPoints = originalSortingAction.points;
-                resultText = t('sortingGame.resultText.perfect');
+                resultKey = 'sortingGame.resultText.perfect';
             } else if (sortingScore >= QUESTIONS_TO_ASK - 2) {
                 finalPoints = Math.round(originalSortingAction.points / 2);
-                resultText = t('sortingGame.resultText.good');
+                resultKey = 'sortingGame.resultText.good';
             } else {
                 finalPoints = 0;
-                resultText = t('sortingGame.resultText.bad');
+                resultKey = 'sortingGame.resultText.bad';
             }
             
-            const resultItemName = t('sortingGame.finalItemName', {sortingScore: sortingScore, questionsToAsk: QUESTIONS_TO_ASK, resultText: resultText});
+            // --> Pakeitimas čia: sukuriame naujo tipo objektą su duomenimis <--
             const resultItem = {
-                nameKey: resultItemName, // Use the generated text as a key (it's not in JSON but it's fine)
+                type: 'sortingResult', // Specialus tipas, kad atpažintume šį įrašą
                 points: finalPoints,
-                realityKey: `${t(originalSortingAction.realityKey)}`
+                realityKey: originalSortingAction.realityKey,
+                // Išsaugome pačius duomenis, o ne sugeneruotą tekstą
+                data: {
+                    score: sortingScore,
+                    total: QUESTIONS_TO_ASK,
+                    resultKey: resultKey 
+                }
             };
-            translations[resultItemName] = resultItemName; // Add it to translations so `t()` function doesn't fail
             
-            if (!weeklyPlan[sortingDayIndex][sortingSlotKey]) weeklyPlan[sortingDayIndex][sortingSlotKey] = [];
-            
+            if (!weeklyPlan[sortingDayIndex][sortingSlotKey]) {
+                weeklyPlan[sortingDayIndex][sortingSlotKey] = [];
+            }
             weeklyPlan[sortingDayIndex][sortingSlotKey].push(resultItem);
             
-            if (originalSortingAction.isWeekly) chosenWeeklyActions.push(originalSortingAction.nameKey);
+            if (originalSortingAction.isWeekly) {
+                chosenWeeklyActions.push(originalSortingAction.nameKey);
+            }
 
             updateScore(finalPoints);
             renderPlanForDay(sortingDayIndex);
@@ -1210,6 +1252,7 @@
             dom.sortingModal.classList.remove('active');
             alert(t('alerts.sortingGameEnded', {sortingScore: sortingScore, questionsToAsk: QUESTIONS_TO_ASK, finalPoints: finalPoints}));
         }
+// --- PABAIGA: Funkcijos rūšiavimo mini žaidimui ---
 
         // --- INITIAL PAGE LOAD ---
         // --- INITIAL PAGE LOAD ---
