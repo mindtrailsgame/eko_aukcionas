@@ -97,13 +97,13 @@
     },
     "finalItemName": "Rūšiavimas ({sortingScore}/{questionsToAsk} teisingai, {resultText})",
     "questions": [
-      { "item": "Sutepta picos dėžė", "explanation": "Riebalais ar maisto likučiais suteptas popierius ir kartonas nėra perdirbami, todėl keliauja į buitinių atliekų konteinerį." },
-      { "item": "Stiklainis nuo agurkų", "explanation": "Švarus stiklainis be dangtelio visada keliauja į stiklo konteinerį. Dangtelis (jei metalinis) – į plastiką." },
-      { "item": "Panaudota baterija", "explanation": "Baterijos, akumuliatoriai ir lemputės yra pavojingos atliekos. Jas reikia mesti į specialias dėžutes prekybos centruose." },
-      { "item": "Plastikinis butelis nuo gėrimo", "explanation": "Visi plastikiniai (PET) buteliai turi būti išmesti į plastiko ir pakuočių konteinerį. Geriausia – suspausti." },
-      { "item": "Perskaitytas laikraštis", "explanation": "Švari makulatūra – laikraščiai, žurnalai, kartoninės dėžutės – visada keliauja į popieriaus konteinerį." },
-      { "item": "Kavos tirščiai", "explanation": "Organinės kilmės atliekos, tokios kaip maisto likučiai, keliauja į buitinių atliekų konteinerį (arba kompostą, jei turite)." },
-      { "item": "Metalinė skardinė nuo konservų", "explanation": "Metalo pakuotės (skardinės, dangteliai) metamos į tą patį konteinerį kaip ir plastikas – geltonąjį." }
+      { "item": "Sutepta picos dėžė", "correctBin": "buitines", "explanation": "Riebalais ar maisto likučiais suteptas popierius ir kartonas nėra perdirbami, todėl keliauja į buitinių atliekų konteinerį." },
+  { "item": "Stiklainis nuo agurkų", "correctBin": "stiklas", "explanation": "Švarus stiklainis be dangtelio visada keliauja į stiklo konteinerį. Dangtelis (jei metalinis) – į plastiką." },
+  { "item": "Panaudota baterija", "correctBin": "pavojingos", "explanation": "Baterijos, akumuliatoriai ir lemputės yra pavojingos atliekos. Jas reikia mesti į specialias dėžutes prekybos centruose." },
+  { "item": "Plastikinis butelis nuo gėrimo", "correctBin": "plastikas", "explanation": "Visi plastikiniai (PET) buteliai turi būti išmesti į plastiko ir pakuočių konteinerį. Geriausia – suspausti." },
+  { "item": "Perskaitytas laikraštis", "correctBin": "popierius", "explanation": "Švari makulatūra – laikraščiai, žurnalai, kartoninės dėžutės – visada keliauja į popieriaus konteinerį." },
+  { "item": "Kavos tirščiai", "correctBin": "buitines", "explanation": "Organinės kilmės atliekos, tokios kaip maisto likučiai, keliauja į buitinių atliekų konteinerį (arba kompostą, jei turite)." },
+  { "item": "Metalinė skardinė nuo konservų", "correctBin": "plastikas", "explanation": "Metalo pakuotės (skardinės, dangteliai) metamos į tą patį konteinerį kaip ir plastikas – geltonąjį." }
     ]
   },
   "items": {
