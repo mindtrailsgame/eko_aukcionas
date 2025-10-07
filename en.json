@@ -97,13 +97,13 @@
     },
     "finalItemName": "Sorting ({sortingScore}/{questionsToAsk} correct, {resultText})",
     "questions": [
-      { "item": "Greasy pizza box", "explanation": "Paper and cardboard stained with grease or food scraps are not recyclable and go into the general waste container." },
-      { "item": "Pickle jar", "explanation": "A clean glass jar without a lid always goes into the glass container. The lid (if metal) goes into plastics." },
-      { "item": "Used battery", "explanation": "Batteries, accumulators, and light bulbs are hazardous waste. They must be disposed of in special boxes at supermarkets." },
-      { "item": "Plastic drink bottle", "explanation": "All plastic (PET) bottles should be thrown into the plastic and packaging container. It's best to crush them first." },
-      { "item": "Read newspaper", "explanation": "Clean paper products – newspapers, magazines, cardboard boxes – always go into the paper container." },
-      { "item": "Coffee grounds", "explanation": "Organic waste, such as food scraps, goes into the general waste container (or a compost bin, if you have one)." },
-      { "item": "Metal food can", "explanation": "Metal packaging (cans, lids) is thrown into the same container as plastic – the yellow one." }
+      { "item": "Greasy pizza box", "correctBin": "buitines", "explanation": "Paper and cardboard stained with grease or food scraps are not recyclable and go into the general waste container." },
+    { "item": "Pickle jar", "correctBin": "stiklas", "explanation": "A clean glass jar without a lid always goes into the glass container. The lid (if metal) goes into plastics." },
+    { "item": "Used battery", "correctBin": "pavojingos", "explanation": "Batteries, accumulators, and light bulbs are hazardous waste. They must be disposed of in special boxes at supermarkets." },
+    { "item": "Plastic drink bottle", "correctBin": "plastikas", "explanation": "All plastic (PET) bottles should be thrown into the plastic and packaging container. It's best to crush them first." },
+    { "item": "Read newspaper", "correctBin": "popierius", "explanation": "Clean paper products – newspapers, magazines, cardboard boxes – always go into the paper container." },
+    { "item": "Coffee grounds", "correctBin": "buitines", "explanation": "Organic waste, such as food scraps, goes into the general waste container (or a compost bin, if you have one)." },
+    { "item": "Metal food can", "correctBin": "plastikas", "explanation": "Metal packaging (cans, lids) is thrown into the same container as plastic – the yellow one." }
     ]
   },
   "items": {
