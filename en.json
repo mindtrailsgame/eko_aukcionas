@@ -27,8 +27,7 @@
       "summaryTitle": "Weekly Impact Summary",
       "summaryCO2": "Your total CO₂ footprint this week: <strong>{totalCo2e} kg</strong>.",
       "summaryCar": "This is equivalent to a car trip of: <strong>{carKmEquivalent} km</strong>.",
-      "summaryWater": "You saved: <strong>{Math.round(totalWaterSaved)} liters of water</strong>.",
-      "summaryBestChoice": "Your most sustainable choice: <strong>\"{mostSustainableChoiceName}\" (+{mostSustainableChoicePoints} pts.)</strong>.",
+    "summaryWater": "You saved: <strong>{totalWaterSaved}</strong> liters of water.",      "summaryBestChoice": "Your most sustainable choice: <strong>\"{mostSustainableChoiceName}\" (+{mostSustainableChoicePoints} pts.)</strong>.",
       "chartLabel": "CO₂ Footprint (kg)",
       "chartTitle": "Weekly CO₂ Footprint Overview",
       "chartYAxisLabel": "CO₂e (kg)"
