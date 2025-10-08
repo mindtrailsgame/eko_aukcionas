@@ -61,6 +61,16 @@
     "digital": "Digital World & Home",
     "positive": "Positive Actions"
   },
+
+    "categories": {
+    "food": "Food",
+    "drinks": "Drinks",
+    "transport": "Transportation",
+    "snacks": "Snacks & Drinks",
+    "shopping": "Shopping & Entertainment",
+    "digital": "Digital World & Home",
+    "positive": "Positive Actions"
+  },
   "wednesdayEvent": {
     "title": "Wednesday's Mishap!",
     "prompt": "Your smartphone fell into the toilet before you had a chance to flush what was floating in it (you ate a kebab yesterday that really disagreed with your stomach). What do you do?",
