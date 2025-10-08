@@ -61,6 +61,17 @@
     "digital": "Skaitmeninis pasaulis ir buitis",
     "positive": "Pozityvūs veiksmai"
   },
+
+    "categories": {
+    "food": "Maistas",
+    "drinks": "Gėrimai",
+    "transport": "Transportas",
+    "snacks": "Užkandžiai ir gėrimai",
+    "shopping": "Pirkiniai ir pramogos",
+    "digital": "Skaitmeninis pasaulis ir buitis",
+    "positive": "Pozityvūs veiksmai"
+  },
+
   "wednesdayEvent": {
     "title": "Nelaimė trečiadienį!",
     "prompt": "Tavo išmanusis telefonas įkrito į klozetą dar nespėjus nuleisti to, kas jame plūduriuoja (dieną prieš suvalgei kebabą, kuris labai susipyko su tavo skrandžiu). Ką darai?",
