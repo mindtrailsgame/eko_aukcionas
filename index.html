@@ -457,7 +457,7 @@
 
         // --- DATA STRUCTURES (NO TEXT, ONLY KEYS) ---
         const items = {
-            'Maistas': [
+            'food': [
                 { nameKey: 'items.maistas.avienos_plovas.name', realityKey: 'items.maistas.avienos_plovas.reality', points: -16, co2e: 25 },
                 { nameKey: 'items.maistas.jautienos_didkepsnis.name', realityKey: 'items.maistas.jautienos_didkepsnis.reality', points: -15, co2e: 16, waterUsed: 1500 },
                 { nameKey: 'items.maistas.kiaulienos_karbonadas.name', realityKey: 'items.maistas.kiaulienos_karbonadas.reality', points: -12, co2e: 7.5 },
@@ -477,7 +477,7 @@
                 { nameKey: 'items.maistas.grybu_sriuba.name', realityKey: 'items.maistas.grybu_sriuba.reality', points: 2, co2e: 0.1, waterSaved: 100 },
                 { nameKey: 'items.maistas.salotos_su_avinzirniais.name', realityKey: 'items.maistas.salotos_su_avinzirniais.reality', points: 3, co2e: 0.3, waterSaved: 300 }
             ],
-            'Gėrimai': [
+            'drinks': [
                 { nameKey: 'items.gerimai.energinis_gerimas.name', realityKey: 'items.gerimai.energinis_gerimas.reality', points: -4, co2e: 0.4 },
                 { nameKey: 'items.gerimai.cappuccino_karves.name', realityKey: 'items.gerimai.cappuccino_karves.reality', points: -4, co2e: 0.46 },
                 { nameKey: 'items.gerimai.matcha_latte_karves.name', realityKey: 'items.gerimai.matcha_latte_karves.reality', points: -4, co2e: 0.43 },
@@ -488,12 +488,12 @@
                 { nameKey: 'items.gerimai.arbata.name', realityKey: 'items.gerimai.arbata.reality', points: 0, co2e: 0.02 },
                 { nameKey: 'items.gerimai.vanduo_is_ciaupo.name', realityKey: 'items.gerimai.vanduo_is_ciaupo.reality', points: 1, co2e: 0, waterSaved: 1.5 }
             ],
-            'Transportas': [
+            'transport': [
                 { nameKey: 'items.transportas.kelione_automobiliu.name', realityKey: 'items.transportas.kelione_automobiliu.reality', points: -14, co2e: 6.8 },
                 { nameKey: 'items.transportas.kelione_viesuoju.name', realityKey: 'items.transportas.kelione_viesuoju.reality', points: -4, co2e: 1.6 },
                 { nameKey: 'items.transportas.kelione_dviraciu.name', realityKey: 'items.transportas.kelione_dviraciu.reality', points: 2, co2e: 0 },
             ],
-            'Užkandžiai ir gėrimai': [
+            'snacks': [
                 { nameKey: 'items.uzkandziai.kibinas_su_aviena.name', realityKey: 'items.uzkandziai.kibinas_su_aviena.reality', points: -8, co2e: 2.5 },
                 { nameKey: 'items.uzkandziai.susiu_rinkinys.name', realityKey: 'items.uzkandziai.susiu_rinkinys.reality', points: -7, co2e: 4.0 },
                 { nameKey: 'items.uzkandziai.pringles.name', realityKey: 'items.uzkandziai.pringles.reality', points: -6, co2e: 0.7 },
@@ -509,7 +509,7 @@
                 { nameKey: 'items.uzkandziai.neptuno_vanduo.name', realityKey: 'items.uzkandziai.neptuno_vanduo.reality', points: -3, co2e: 0.15 },
                 { nameKey: 'items.uzkandziai.smetoniska_gira.name', realityKey: 'items.uzkandziai.smetoniska_gira.reality', points: -2, co2e: 0.3 },
             ],
-            'Pirkiniai ir pramogos': [
+            'shopping': [
                 { nameKey: 'items.pirkiniai.skrydis_lektuvu.name', realityKey: 'items.pirkiniai.skrydis_lektuvu.reality', points: -80, isWeekly: true, co2e: 275 },
                 { nameKey: 'items.pirkiniai.naujas_telefonas.name', realityKey: 'items.pirkiniai.naujas_telefonas.reality', points: -75, co2e: 75},
                 { nameKey: 'items.pirkiniai.greitosios_mados_drabuzis.name', realityKey: 'items.pirkiniai.greitosios_mados_drabuzis.reality', points: -30, co2e: 33, waterUsed: 3700 },
@@ -519,14 +519,14 @@
                 { nameKey: 'items.pirkiniai.skaitmenine_knyga.name', realityKey: 'items.pirkiniai.skaitmenine_knyga.reality', points: -2, co2e: 0.03},
                 { nameKey: 'items.pirkiniai.nauja_knyga_popierine.name', realityKey: 'items.pirkiniai.nauja_knyga_popierine.reality', points: -6, co2e: 2},
             ],
-            'Skaitmeninis pasaulis ir buitis': [
+            'digital': [
                 { nameKey: 'items.skaitmeninis.video_zaidimai.name', realityKey: 'items.skaitmeninis.video_zaidimai.reality', points: -4, co2e: 0.8},
                 { nameKey: 'items.skaitmeninis.chatgpt_naudojimas.name', realityKey: 'items.skaitmeninis.chatgpt_naudojimas.reality', points: -3, co2e: 0.005},
                 { nameKey: 'items.skaitmeninis.socialiniai_tinklai.name', realityKey: 'items.skaitmeninis.socialiniai_tinklai.reality', points: -2, co2e: 0.1},
                 { nameKey: 'items.skaitmeninis.telefono_ikrovimas.name', realityKey: 'items.skaitmeninis.telefono_ikrovimas.reality', points: -1, isWeekly: true, co2e: 0.01 },
                 { nameKey: 'items.skaitmeninis.skalbimas_dziovinimas.name', realityKey: 'items.skaitmeninis.skalbimas_dziovinimas.reality', points: -5, co2e: 1.5, waterUsed: 50},
             ],
-            'Pozityvūs veiksmai': [
+            'positive': [
                 { nameKey: 'items.pozityvus.savaite_be_plastiko.name', realityKey: 'items.pozityvus.savaite_be_plastiko.reality', points: 10, isWeekly: true, co2e: -5 },
                 { nameKey: 'items.pozityvus.kruopstus_rusiavimas.name', realityKey: 'items.pozityvus.kruopstus_rusiavimas.reality', points: 10, isWeekly: true, co2e: -2 }
             ]
@@ -555,14 +555,14 @@
             WEEKDAYS = t('time.weekdaysShort');
             DAY_NAMES = t('time.weekdaysLong');
             PLAN_SLOTS = [
-                { titleKey: 'planSlots.breakfast', allowedCategories: ['Maistas', 'Gėrimai'] },
-                { titleKey: 'planSlots.lunch', allowedCategories: ['Maistas', 'Gėrimai'] },
-                { titleKey: 'planSlots.dinner', allowedCategories: ['Maistas', 'Gėrimai'] },
-                { titleKey: 'planSlots.transport', allowedCategories: ['Transportas'] },
-                { titleKey: 'planSlots.snacks', allowedCategories: ['Užkandžiai ir gėrimai'] },
-                { titleKey: 'planSlots.shopping', allowedCategories: ['Pirkiniai ir pramogos'] },
-                { titleKey: 'planSlots.digital', allowedCategories: ['Skaitmeninis pasaulis ir buitis'] },
-                { titleKey: 'planSlots.positive', allowedCategories: ['Pozityvūs veiksmai'] }
+                { titleKey: 'planSlots.breakfast', allowedCategories: ['food', 'drinks'] },
+                { titleKey: 'planSlots.lunch',     allowedCategories: ['food', 'drinks'] },
+                { titleKey: 'planSlots.dinner',    allowedCategories: ['food', 'drinks'] },
+                { titleKey: 'planSlots.transport', allowedCategories: ['transport'] },
+                { titleKey: 'planSlots.snacks',    allowedCategories: ['snacks'] },
+                { titleKey: 'planSlots.shopping',  allowedCategories: ['shopping'] },
+                { titleKey: 'planSlots.digital',   allowedCategories: ['digital'] },
+                { titleKey: 'planSlots.positive',  allowedCategories: ['positive'] }
             ];
         }
 
@@ -794,7 +794,7 @@
                 if (!itemsInCategory) return;
 
                 const categoryTitle = document.createElement('h3');
-                categoryTitle.textContent = categoryName;
+                categoryTitle.textContent = t(`categories.${categoryName}`);
                 dom.actionsSidebar.appendChild(categoryTitle);
 
                 itemsInCategory.forEach(item => {
