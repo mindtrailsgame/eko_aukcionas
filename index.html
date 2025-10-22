@@ -316,6 +316,8 @@
         }
 
     </style>
+    <script src="https://unpkg.com/drag-drop-touch@1.3.1/DragDropTouch.js"></script>
+
 </head>
     <body>
         <div class="phone-wrapper">
@@ -1016,9 +1018,25 @@
                 const allDailyItems = Object.values(dayPlan).flat();
                 if (allDailyItems.length > 0) {
                     summaryHTML += `<h4 style="margin-top: 15px; margin-bottom: 5px; color: var(--primary-color); text-align: left;">${DAY_NAMES[dayIndex]}</h4>`;
-                    const dailyItemsHTML = allDailyItems.map(item =>
-                        `<li>• ${t(item.nameKey)} <span style="font-weight: bold;">(${item.points > 0 ? '+' : ''}${item.points} ${t('general.points_suffix')})</span></li>`
-                    ).join('');
+                    const dailyItemsHTML = allDailyItems.map(item => {
+                    let itemName;
+                    
+                    if (item.type === 'sortingResult') {
+                        // Naudojame tą pačią logiką kaip ir createPlanSlot
+                        itemName = t('sortingGame.finalItemName', {
+                            sortingScore: item.data.score,
+                            questionsToAsk: item.data.total,
+                            resultText: t(item.data.resultKey)
+                        });
+                    } else {
+                        // Standartinė logika kitiems item'ams
+                        itemName = t(item.nameKey);
+                    }
+                    
+                    // Grąžiname pilną HTML eilutę
+                    return `<li>• ${itemName} <span style="font-weight: bold;">(${item.points > 0 ? '+' : ''}${item.points} ${t('general.points_suffix')})</span></li>`;
+                
+                }).join('');
                     summaryHTML += `<ul style="list-style-type: none; padding-left: 0; text-align: left; font-size: 0.9em; margin: 0;">${dailyItemsHTML}</ul>`;
                 }
             });
@@ -1283,8 +1301,7 @@
 // --- PABAIGA: Funkcijos rūšiavimo mini žaidimui ---
 
         // --- INITIAL PAGE LOAD ---
-        // --- INITIAL PAGE LOAD ---
-        // --- INITIAL PAGE LOAD ---
+      
         (async () => {
             // First, try to load an existing game from localStorage.
             const gameWasLoaded = await loadGameState();
