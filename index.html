@@ -802,20 +802,7 @@
                 itemsInCategory.forEach(item => {
                     const itemDiv = document.createElement('div');
                     itemDiv.className = 'draggable-item';
-                    itemDiv.draggable = true;
-
-                    let touchStartX = 0;
-                    let touchStartY = 0;
-                    let touchStartTime = 0;
-                    const dragThreshold = 10; // 10px "paklaida", kad ignoruotume virpėjimą
-                    const holdTime = 150;     // 150ms minimalus laikas tempimui
-
-                    itemDiv.addEventListener('touchstart', (e) => {
-                        // Įrašome pradinę vietą ir laiką
-                        touchStartX = e.touches[0].clientX;
-                        touchStartY = e.touches[0].clientY;
-                        touchStartTime = new Date().getTime();
-                    }, { passive: true });
+                    itemDiv.draggable = false;
 
                     if (!isFirstHintShown && isFirstItem) {
                         itemDiv.classList.add('first-item-hint');
@@ -840,44 +827,48 @@
                             });
                         }
                     }
-
-                        itemDiv.dataset.itemNameKey = item.nameKey;
-                        const itemName = t(item.nameKey);
-                        itemDiv.innerHTML = `
-                            <span class="item-name-sidebar">${itemName}</span>
-                            <strong class="item-points-sidebar">${item.points > 0 ? '+' : ''}${item.points} ${t('general.points_suffix')}</strong>
-                        `;
                     
+                    itemDiv.dataset.itemNameKey = item.nameKey;
+                    const itemName = t(item.nameKey);
+                    itemDiv.innerHTML = `
+                        <span class="item-name-sidebar">${itemName}</span>
+                        <strong class="item-points-sidebar">${item.points > 0 ? '+' : ''}${item.points} ${t('general.points_suffix')}</strong>
+                    `;
+
                     itemDiv.addEventListener('dragstart', (event) => {
                         closeSidebar();
                         if (itemDiv.classList.contains('disabled')) {
                             event.preventDefault(); return;
                         }
-
-                        // --- PRADŽIA: Nauja "anti-scroll" logika ---
-                        if (touchStartTime > 0) {
-                            const now = new Date().getTime();
-                            if (now - touchStartTime < holdTime) {
-                                event.preventDefault(); 
-                                return;
-                            }
-                            const deltaX = Math.abs(event.clientX - touchStartX);
-                            const deltaY = Math.abs(event.clientY - touchStartY);
-                            if (deltaY > deltaX && deltaY > dragThreshold) {
-                                event.preventDefault(); 
-                                return;
-                            }
-                        }
-                        // --- PABAIGA: Nauja "anti-scroll" logika ---
-
                         event.dataTransfer.setData('text/plain', item.nameKey);
                         event.dataTransfer.effectAllowed = 'move';
                     });
 
-                    itemDiv.addEventListener('touchend', () => {
-                        // Išvalome pradinį laiką, kad kiti įvykiai neveiktų klaidingai
-                        touchStartTime = 0;
-                    }, { passive: true });
+                    let pressTimer = null;
+
+                    itemDiv.addEventListener('touchstart', (e) => {
+                        // Pradedame laikmatį, kad elementas taptų tempiamas
+                        pressTimer = setTimeout(() => {
+                            if (!itemDiv.classList.contains('disabled')) {
+                                itemDiv.draggable = true;
+                            }
+                            pressTimer = null;
+                        }, 300); // 300ms delsa – gali pasireguliuoti pagal save
+                    }, { passive: true }); // 'passive: true' pagerina skrolinimo našumą
+
+                    const cancelPress = () => {
+                        // Atšaukia laikmatį, jei pirštas pajuda arba atleidžiamas
+                        clearTimeout(pressTimer);
+                        pressTimer = null;
+                    };
+
+                    itemDiv.addEventListener('touchmove', cancelPress);
+                    itemDiv.addEventListener('touchend', cancelPress);
+
+                    // BŪTINA: Kai tempimas baigiasi, vėl padarome elementą netempiamu
+                    itemDiv.addEventListener('dragend', () => {
+                        itemDiv.draggable = false;
+                    });
 
                     dom.actionsSidebar.appendChild(itemDiv);
                 });
