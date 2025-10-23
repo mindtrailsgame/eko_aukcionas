@@ -845,6 +845,9 @@
                     });
 
                     let pressTimer = null;
+                    let startX = 0;
+                    let startY = 0;
+                    const moveThreshold = 10; // 10px paklaida
 
                     itemDiv.addEventListener('touchstart', (e) => {
                         // Pradedame laikmatį, kad elementas taptų tempiamas
@@ -854,13 +857,33 @@
                             }
                             pressTimer = null;
                         }, 300); // 300ms delsa – gali pasireguliuoti pagal save
+                    
+                        startX = e.touches[0].clientX;
+                        startY = e.touches[0].clientY;
+
                     }, { passive: true }); // 'passive: true' pagerina skrolinimo našumą
 
-                    const cancelPress = () => {
-                        // Atšaukia laikmatį, jei pirštas pajuda arba atleidžiamas
+                    const cancelPress = (e) => {
+    // Tikriname, ar laikmatis vis dar veikia
+                    if (pressTimer) {
+                        
+                        // Jei įvykis yra judesys, patikriname "paklaidą"
+                        if (e.type === 'touchmove') {
+                            const deltaX = Math.abs(e.touches[0].clientX - startX);
+                            const deltaY = Math.abs(e.touches[0].clientY - startY);
+                            
+                            if (deltaX < moveThreshold && deltaY < moveThreshold) {
+                                // Judesys per mažas (tik virpėjimas), NEATŠAUKIAME
+                                return; 
+                            }
+                        }
+                        
+                        // Jei tai 'touchend' arba 'touchmove' viršijo paklaidą,
+                        // atšaukiame laikmatį.
                         clearTimeout(pressTimer);
                         pressTimer = null;
-                    };
+                    }
+                };
 
                     itemDiv.addEventListener('touchmove', cancelPress);
                     itemDiv.addEventListener('touchend', cancelPress);
@@ -869,6 +892,12 @@
                     itemDiv.addEventListener('dragend', () => {
                         itemDiv.draggable = false;
                     });
+
+                    itemDiv.addEventListener('mousedown', () => {
+                    if (!itemDiv.classList.contains('disabled')) {
+                        itemDiv.draggable = true;
+                    }
+                });
 
                     dom.actionsSidebar.appendChild(itemDiv);
                 });
